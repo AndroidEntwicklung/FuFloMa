@@ -3,22 +3,24 @@ package com.example.fufloma;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	TextView location = null;
-	Button button = null;
+	TextView tv_network = null;
+	TextView tv_gps = null;
+	boolean networkStatus = false;
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
+	Intent nextIntent = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,30 +28,46 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
-		location = (TextView) findViewById(R.id.textView1);
-		button = (Button) findViewById(R.id.button1);
+		tv_network = (TextView) findViewById(R.id.NetworkSearchInfo);
+		tv_gps = (TextView) findViewById(R.id.GpsSearchInfo);
 
+		nextIntent = new Intent(MainActivity.this, ProductListActivity.class);
+		
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);
-		
+
 		sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		sharedPref.edit().putInt("bla", 123).commit();
-		int bla = sharedPref.getInt("bla", 1);
-		//int bla = 2;
-		String blab = String.valueOf(bla);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		
-	      Toast
-	        .makeText(MainActivity.this, blab, Toast.LENGTH_LONG)
-	        .show();
+		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
 		
-	      button.setOnClickListener(new Button.OnClickListener() { 
-	        	public void onClick(View view) {
-	                Intent myIntent = new Intent(view.getContext(), TestPrefs.class);
-	                startActivity(myIntent);
-	        	}
-	        });
+		tv_gps.setText("Checking for Location ...");
 		
+		tv_network.setText("Checking for network connection ...");
+		tv_network.setTextColor(Color.BLACK);
 		
+		if (isNetworkAvailable())
+		{
+			tv_network.setText("Network found!");
+			networkStatus = true;
+		}
+		else
+		{
+			tv_network.setText("No network :(");
+			tv_network.setTextColor(Color.RED);
+			networkStatus = false;
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		locMgr.removeUpdates(onLocationChange);
 	}
 
 	@Override
@@ -59,11 +77,28 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	private boolean isNetworkAvailable() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo info = cm.getActiveNetworkInfo();
+
+		return (info != null);
+	}
+
 	LocationListener onLocationChange = new LocationListener() {
 		public void onLocationChanged(Location fix) {
-			location.setText(String.valueOf(fix.getLatitude()) + ", "
+			
+			sharedPref.edit().putFloat("lat", (float) fix.getLatitude()).commit();
+			sharedPref.edit().putFloat("lon", (float) fix.getLongitude()).commit();
+			
+			//if (fix.getAccuracy() < 100) {
+				locMgr.removeUpdates(onLocationChange);
+				tv_gps.setText("Location found!");
+				if (networkStatus)
+					startActivity(nextIntent);
+			//}
+			/*location.setText(String.valueOf(fix.getLatitude()) + ", "
 					+ String.valueOf(fix.getLongitude()));
-			locMgr.removeUpdates(onLocationChange);
+			locMgr.removeUpdates(onLocationChange);*/
 		}
 
 		public void onProviderDisabled(String provider) {

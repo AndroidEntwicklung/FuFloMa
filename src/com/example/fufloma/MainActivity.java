@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
 		tv_gps = (TextView) findViewById(R.id.GpsSearchInfo);
 
 		nextIntent = new Intent(MainActivity.this, ProductListActivity.class);
+		nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);

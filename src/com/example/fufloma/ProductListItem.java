@@ -6,10 +6,14 @@ public class ProductListItem {
 	private String description;
 	private String location;
 	private Bitmap bm;
-	private String price;
+	private float price;
 
 	public String getDescription() {
 		return description;
+	}
+	
+	public String getShortDescription() {
+		return description.substring(0,30) + " ...";
 	}
 
 	public void setDescription(String _description) {
@@ -31,59 +35,21 @@ public class ProductListItem {
 	public void setBitmap(Bitmap _bm) {
 		this.bm = _bm;
 	}
-
-	public String getType() {
-		return type;
+	
+	public void setPrice(float _price) {
+		this.price = _price;
 	}
-
-	public void setType(String _type) {
-		this.type = _type;
+	
+	public float getPrice() {
+		return price;
 	}
-
-	public int getRating() {
-		return rating;
-	}
-
-	public void setRating(int _rating) {
-		this.rating = _rating;
-	}
-
-	public String getReview() {
-		return review;
-	}
-
-	public void setReview(String _review) {
-		this.review = _review;
-	}
-
-	public String getDistance() {
-		return distance;
-	}
-
-	public void setDistance(String _distance) {
-		this.distance = _distance;
-	}
-
-	public String getIconpath() {
-		return iconpath;
-	}
-
-	public void setIconpath(String _iconpath) {
-		this.iconpath = _iconpath;
-	}
-
-	public String getImagepath() {
-		return imagepath;
-	}
-
-	public void setImagepath(String _imagepath) {
-		this.imagepath = _imagepath;
-	}
-
-	@Override
+	
 	public String toString() {
-		return "[ name=" + name + ", street=" + street + ", distance="
-				+ distance + ", iconpath=" + iconpath + "]";
+		boolean hasBm = false;
+		if (bm != null)
+			hasBm = true;
+			
+		return "[ description=" + description + ", location=" + location + ", price="
+				+ price + ", hasBitmap=" + hasBm + "]";
 	}
-
 }

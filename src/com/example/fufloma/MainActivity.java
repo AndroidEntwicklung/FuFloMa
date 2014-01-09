@@ -11,12 +11,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	TextView tv_network = null;
 	TextView tv_gps = null;
+	ImageView iv_hfu_spin = null;
+	AnimationDrawable frameAnimation = null;
 	boolean networkStatus = false;
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
@@ -43,6 +47,12 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		
+		iv_hfu_spin = (ImageView)findViewById(R.id.hfuRotator);
+		
+		iv_hfu_spin.setBackgroundResource(R.drawable.hfu_spin_animation);
+		frameAnimation = (AnimationDrawable) iv_hfu_spin.getBackground();
+		frameAnimation.start();
+
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
 		
 		tv_gps.setText("Checking for Location ...");
@@ -68,6 +78,7 @@ public class MainActivity extends Activity {
 		super.onPause();
 		
 		locMgr.removeUpdates(onLocationChange);
+		frameAnimation.stop();
 	}
 
 	@Override
@@ -90,15 +101,11 @@ public class MainActivity extends Activity {
 			sharedPref.edit().putFloat("lat", (float) fix.getLatitude()).commit();
 			sharedPref.edit().putFloat("lon", (float) fix.getLongitude()).commit();
 			
-			//if (fix.getAccuracy() < 100) {
-				locMgr.removeUpdates(onLocationChange);
-				tv_gps.setText("Location found!");
-				if (networkStatus)
-					startActivity(nextIntent);
-			//}
-			/*location.setText(String.valueOf(fix.getLatitude()) + ", "
-					+ String.valueOf(fix.getLongitude()));
-			locMgr.removeUpdates(onLocationChange);*/
+			locMgr.removeUpdates(onLocationChange);
+			frameAnimation.stop();
+			tv_gps.setText("Location found!");
+			if (networkStatus)
+				startActivity(nextIntent);
 		}
 
 		public void onProviderDisabled(String provider) {

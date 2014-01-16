@@ -11,15 +11,14 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class ProductListActivity extends Activity {
-	SharedPreferences sharedPref = null;
-	TextView tv_lon = null;
-	TextView tv_lat = null;
-	TextView tv_adr = null;
+	SharedPreferences sharedPref;
+	TextView tv_lon;
+	TextView tv_lat;
+	TextView tv_mainloc;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,38 +27,38 @@ public class ProductListActivity extends Activity {
 		
 		tv_lon = (TextView) findViewById(R.id.textView1);
 		tv_lat = (TextView) findViewById(R.id.textView2);
-		tv_adr = (TextView) findViewById(R.id.textView3);
+		tv_mainloc = (TextView) findViewById(R.id.MainLocation);
 		
 		sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 		tv_lon.setText("Lon: " + String.valueOf(sharedPref.getFloat("lon", 0.0f)));
 		tv_lat.setText("Lat: " + String.valueOf(sharedPref.getFloat("lat", 0.0f)));
+
+		DummyDatabase localDB = new DummyDatabase();
 		
 		Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 		
         List<Address> addresses;
         
 		try {
+		
 			addresses = geoCoder.getFromLocation(sharedPref.getFloat("lat", 0.0f) , sharedPref.getFloat("lon", 0.0f), 1);
+			tv_mainloc.setText(addresses.get(0).getLocality());
 
-        String strCompleteAddress= "";
-        //if (addresses.size() > 0)
-        //{
-        for (int i=0; i<addresses.get(0).getMaxAddressLineIndex();i++)
-        	strCompleteAddress+= addresses.get(0).getAddressLine(i) + "\n";
-       // }
-        //Log.i("MyLocTAG => ", strCompleteAddress);
-        tv_adr.setText(strCompleteAddress);
+			final ListView lv1 = (ListView) findViewById(R.id.product_list1);
+			final ListView lv2 = (ListView) findViewById(R.id.product_list2);
+
+			ArrayList<ProductListItem> productList = localDB.getListData(addresses.get(0).getLocality(), true);
+			lv1.setAdapter(new ProductListAdapter(this, productList));
+
+			productList = localDB.getListData(addresses.get(0).getLocality(), false);
+			lv2.setAdapter(new ProductListAdapter(this, productList));
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		
-		
-		DummyDatabase localDB = new DummyDatabase();
-		ArrayList<ProductListItem> productList = localDB.getListData();
-		final ListView lv1 = (ListView) findViewById(R.id.product_list);
-		lv1.setAdapter(new ProductListAdapter(this, productList));
 		
 	}
 	

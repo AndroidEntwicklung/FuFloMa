@@ -18,6 +18,7 @@ public class ProductListAdapter extends BaseAdapter {
 	private ArrayList<ProductListItem> listData;
 	private LayoutInflater layoutInflater;
 	NumberFormat form = NumberFormat.getCurrencyInstance(new Locale("de", "DE"));
+
 	
 	public ProductListAdapter(Context context, ArrayList<ProductListItem> listData)
 	{

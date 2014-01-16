@@ -2,12 +2,14 @@ package com.example.fufloma;
 
 import android.graphics.Bitmap;
 
+
 public class ProductListItem {
 	private int shortDescriptionLength = 30;
 	private String description;
 	private String location;
 	private Bitmap bm;
 	private float price;
+	private float curDistance;
 
 	public String getDescription() {
 		return description;
@@ -30,7 +32,10 @@ public class ProductListItem {
 
 	public String getPublicLocation() {
 		String[] locationsplitter = location.split(",");
-		return locationsplitter[locationsplitter.length-1];
+		if (curDistance > 0)
+			return locationsplitter[locationsplitter.length-1] + " (" + String.format("%.1f", curDistance/1000) +"km)";
+		else
+			return locationsplitter[locationsplitter.length-1];
 	}
 	public void setLocation(String _location) {
 		this.location = _location;
@@ -50,6 +55,11 @@ public class ProductListItem {
 	
 	public float getPrice() {
 		return price;
+	}
+	
+	public void setDistance(float _dist)
+	{
+		curDistance = _dist;
 	}
 	
 	public String toString() {

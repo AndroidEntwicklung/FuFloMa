@@ -10,13 +10,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+public class ProductListAdapter extends BaseAdapter {
 
-public class ProductListAdapter extends Activity {
-
-	
 	private ArrayList<ProductListItem> listData;
 	private LayoutInflater layoutInflater;
 	NumberFormat form = NumberFormat.getCurrencyInstance(new Locale("de", "DE"));
@@ -27,18 +26,22 @@ public class ProductListAdapter extends Activity {
 		layoutInflater = LayoutInflater.from(context);
 	}
 	
+	@Override
 	public int getCount() {
 		return listData.size();
 	}
 
+	@Override
 	public Object getItem(int position) {
 		return listData.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		
@@ -58,7 +61,7 @@ public class ProductListAdapter extends Activity {
 		BigDecimal price1 = new BigDecimal(listData.get(position).getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP);
 		
 		holder.shortdesc.setText(listData.get(position).getShortDescription());
-		holder.location.setText(listData.get(position).getLocation());
+		holder.location.setText(listData.get(position).getPublicLocation());
 		holder.price.setText(form.format(price1));
 		holder.bm.setImageResource(R.id.bitmap);
 		

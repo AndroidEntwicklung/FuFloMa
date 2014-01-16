@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +31,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 		tv_network = (TextView) findViewById(R.id.NetworkSearchInfo);
 		tv_gps = (TextView) findViewById(R.id.GpsSearchInfo);
@@ -38,11 +40,10 @@ public class MainActivity extends Activity {
 		nextIntent = new Intent(MainActivity.this, ProductListActivity.class);
 		nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		
-		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-				onLocationChange);
+		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
 
 		sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-	}
+		}
 	
 	@Override
 	protected void onResume() {
@@ -72,6 +73,7 @@ public class MainActivity extends Activity {
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}
+		testSkipLocation(9.87654f, 48.3927f);
 	}
 	
 	@Override
@@ -96,12 +98,25 @@ public class MainActivity extends Activity {
 		return (info != null);
 	}
 
+	private void testSkipLocation(float lat, float lon)
+	{
+		sharedPref.edit().putFloat("lat", lat);
+		sharedPref.edit().putFloat("lon", lon);
+
+		locMgr.removeUpdates(onLocationChange);
+		frameAnimation.stop();
+		tv_gps.setText("Location found!");
+		if (networkStatus)
+			startActivity(nextIntent);
+	}
+	
+	
 	LocationListener onLocationChange = new LocationListener() {
 		public void onLocationChanged(Location fix) {
 			
 			sharedPref.edit().putFloat("lat", (float) fix.getLatitude()).commit();
 			sharedPref.edit().putFloat("lon", (float) fix.getLongitude()).commit();
-			
+
 			locMgr.removeUpdates(onLocationChange);
 			frameAnimation.stop();
 			tv_gps.setText("Location found!");

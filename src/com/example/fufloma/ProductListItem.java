@@ -3,6 +3,7 @@ package com.example.fufloma;
 import android.graphics.Bitmap;
 
 public class ProductListItem {
+	private int shortDescriptionLength = 30;
 	private String description;
 	private String location;
 	private Bitmap bm;
@@ -13,7 +14,10 @@ public class ProductListItem {
 	}
 	
 	public String getShortDescription() {
-		return description.substring(0,30) + " ...";
+		if (description.length() <= shortDescriptionLength)
+			return description;
+		else
+			return description.substring(0,30) + " ...";
 	}
 
 	public void setDescription(String _description) {
@@ -24,6 +28,10 @@ public class ProductListItem {
 		return location;
 	}
 
+	public String getPublicLocation() {
+		String[] locationsplitter = location.split(",");
+		return locationsplitter[locationsplitter.length-1];
+	}
 	public void setLocation(String _location) {
 		this.location = _location;
 	}

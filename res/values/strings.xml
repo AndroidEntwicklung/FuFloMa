@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="preference_file_key">com.example.fufloma</string>
     <string name="product_image">Produktbild</string>
+    <string name="button_interested">INTERESSE!</string>
 
 </resources>

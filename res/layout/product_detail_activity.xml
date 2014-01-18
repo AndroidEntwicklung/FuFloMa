@@ -8,7 +8,8 @@
     android:paddingLeft="0dip"
     android:paddingRight="0dip"
     android:paddingTop="0dip"
-    tools:context=".ProductDetailAcitvity" >
+    tools:context=".ProductDetailAcitvity"
+    android:background="@drawable/app_hintergrund2" >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +22,19 @@
             android:layout_height="match_parent"
 	        android:scaleType="fitXY"
 	        android:adjustViewBounds="true"
+	        android:layout_marginBottom="25dip"
 	        android:contentDescription="@string/product_image" />
+	    
+	    <Button
+	        android:id="@+id/Button_ILLNESS"
+	        android:layout_width="wrap_content"
+	        android:layout_height="90dip"
+	        android:textSize="40sp"
+	        android:gravity="center_vertical|center"
+	        android:layout_alignParentBottom="true"
+	        android:layout_centerHorizontal="true"
+	        android:text="@string/button_interested"
+	        style="@style/CustomStyleButton" />
 	    
     </RelativeLayout>
     

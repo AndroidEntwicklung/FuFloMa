@@ -7,5 +7,6 @@
     <string name="preference_file_key">com.example.fufloma</string>
     <string name="product_image">Produktbild</string>
     <string name="button_interested">INTERESSE!</string>
+    <string name="title_activity_gmaps">GMapsActivity</string>
 
 </resources>

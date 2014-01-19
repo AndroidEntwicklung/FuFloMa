@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 public class ProductDetailActivity extends Activity {
@@ -41,6 +42,14 @@ public class ProductDetailActivity extends Activity {
                     startActivity(myIntent);
                 }
             });
+        
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton1);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), GMapsActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

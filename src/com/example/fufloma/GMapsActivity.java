@@ -4,10 +4,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.provider.SyncStateContract.Constants;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ public class GMapsActivity extends Activity {
 		// Load map
         try {
             // Loading map
-            initilizeMap();
+            initilizeMap(savedInstanceState);
  
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,7 +38,7 @@ public class GMapsActivity extends Activity {
     /**
      * function to load map. If map is not created it will create it for you
      * */
-    private void initilizeMap() {
+    private void initilizeMap(Bundle savedInstanceState) {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
  
@@ -55,13 +54,30 @@ public class GMapsActivity extends Activity {
         	googleMap.setMyLocationEnabled(true);
         	googleMap.getUiSettings().setCompassEnabled(true);
         	
-        	// zoom to current location
-        	Location location = googleMap.getMyLocation();
-        	
-            if (location != null) {
-            	LatLng latlngLoc = new LatLng(location.getLatitude(), location.getLongitude());
-            	googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlngLoc, 18));
+        	// zoom to given location
+    		double lat = 0;
+    		double lng = 0;
+
+            if (savedInstanceState == null) {
+                Bundle extras = getIntent().getExtras();
+
+                if (extras == null) {
+            		lat = 0;
+            		lng = 0;
+                } else {
+                	lat = extras.getDouble("lat");
+                	lng = extras.getDouble("lng");
+                }
+            } else {
+            	lat = (Double) savedInstanceState.getSerializable("lat");
+            	lat = (Double) savedInstanceState.getSerializable("lng");
             }
+        	
+            LatLng latlngLoc = new LatLng(lat, lng);
+            MarkerOptions marker = new MarkerOptions().position(latlngLoc);
+            
+            googleMap.addMarker(marker);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlngLoc, 14));
         }
     }
 	

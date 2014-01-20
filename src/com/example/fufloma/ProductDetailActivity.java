@@ -10,7 +10,6 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -47,6 +46,10 @@ public class ProductDetailActivity extends Activity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), GMapsActivity.class);
+                
+                myIntent.putExtra("lat", 48.0501);
+                myIntent.putExtra("lng", 8.2014);
+                
                 startActivity(myIntent);
             }
         });

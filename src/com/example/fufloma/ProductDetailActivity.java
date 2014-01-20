@@ -10,10 +10,12 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NavUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ProductDetailActivity extends Activity {
 	
@@ -24,6 +26,7 @@ public class ProductDetailActivity extends Activity {
 		setContentView(R.layout.product_detail_activity);
 		setupActionBar();
 		
+        // setup product image
 		ImageView imageView = (ImageView)findViewById(R.id.product_detail_image);
 
         Drawable drawable = getResources().getDrawable(R.drawable.produkt_maus);
@@ -42,7 +45,8 @@ public class ProductDetailActivity extends Activity {
                 }
             });
         
-        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton1);
+        // setup map button
+        ImageButton imageButton = (ImageButton) findViewById(R.id.mapButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), GMapsActivity.class);
@@ -53,6 +57,16 @@ public class ProductDetailActivity extends Activity {
                 startActivity(myIntent);
             }
         });
+        
+        // setup city / reputation TextView
+        TextView txtView = (TextView) findViewById(R.id.cityRepText);
+        txtView.setText("78147 Vöhrenbach (8 km)\nVerkäufer:\t\t5 V / 10 K");
+        
+        // setup description TextView
+        TextView descView = (TextView) findViewById(R.id.descText);
+        descView.setText("Computermaus ideal für Laptops, etc.!! Wie neu, kaum gebraucht. Ohne Batterie! Müssen extra gekauft werden, braucht AA-Batterien. Die Maus ist ohne Kabel, also per Funk, sehr praktisch. Computermaus ideal für Laptops, etc.!! Wie neu, kaum gebraucht. Ohne Batterie! Müssen extra gekauft werden, braucht AA-Batterien. Die Maus ist ohne Kabel, also per Funk, sehr praktisch.");
+        descView.setMovementMethod(new ScrollingMovementMethod());
+        descView.setScrollbarFadingEnabled(false);
     }
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

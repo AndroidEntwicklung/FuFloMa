@@ -19,14 +19,14 @@
 	    <ImageView
 	        android:id="@+id/product_detail_image"
 	        android:layout_width="match_parent"
-            android:layout_height="match_parent"
-	        android:scaleType="fitXY"
-	        android:adjustViewBounds="true"
+	        android:layout_height="match_parent"
 	        android:layout_marginBottom="25dip"
-	        android:contentDescription="@string/product_image" />
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/product_image"
+	        android:scaleType="centerCrop" />
 	    
 	    <Button
-	        android:id="@+id/Button_ILLNESS"
+	        android:id="@+id/interestButton"
 	        android:layout_width="wrap_content"
 	        android:layout_height="90dip"
 	        android:textSize="40sp"
@@ -43,14 +43,77 @@
         android:layout_height="0dp"
         android:layout_weight="0.5">
 
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/icon_map" />
+	    <ImageButton
+	        android:id="@+id/mapButton"
+	        android:layout_width="70dp"
+	        android:layout_height="70dp"
+	        android:layout_marginLeft="30dp"
+	        android:layout_marginTop="30dp"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/gmaps_desc"
+	        android:scaleType="centerInside"
+	        android:background="@null" 
+	        android:src="@drawable/icon_map" />
+	
+	    <TextView
+	        android:id="@+id/cityRepText"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignTop="@+id/mapButton"
+	        android:layout_marginLeft="18dp"
+	        android:layout_marginTop="2dp"
+	        android:layout_toRightOf="@+id/mapButton"
+	        android:text="@string/dummy"
+	        android:textSize="26sp"
+	        android:textStyle="bold" />
+	    
+	     <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="120dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_marginRight="20dp"
+	        android:layout_marginBottom="20dp"
+	        android:background="#7FFF" >
+
+	        <TextView
+	            android:id="@+id/descText"
+	            android:layout_width="match_parent"
+	            android:layout_height="190dp"
+	            android:layout_margin="20dp"
+				android:scrollbars="vertical"
+	            android:text="@string/dummy"
+	            android:textSize="26sp"
+	            android:textColor="#000"
+				android:textColorHighlight="#000" />
+	        
+	        <TextView
+	            android:id="@+id/stateText"
+	            android:layout_width="450dip"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/descText"
+	            android:layout_marginBottom="20dp"
+	            android:layout_marginLeft="20dp"
+	            android:layout_marginRight="0dp"
+	            android:layout_marginTop="15dp"
+	            android:text="Zustand:\t\twie neu"
+	            android:textSize="26sp"
+	            android:textStyle="italic" />
+	        
+	        <TextView
+	            android:id="@+id/priceText"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/descText"
+	            android:layout_toRightOf="@id/stateText"
+	            android:layout_alignBaseline="@id/stateText"
+        		android:gravity="right"
+	            android:text="15€"
+	            android:textSize="40sp"
+	        	android:textStyle="bold" />
+	        
+	      </RelativeLayout>
     
      </RelativeLayout>
-    
+
 </LinearLayout>

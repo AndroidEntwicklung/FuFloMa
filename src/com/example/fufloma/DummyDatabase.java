@@ -15,6 +15,7 @@ public class DummyDatabase {
 		productData.setDescription("Gaaaaannnnnz toller kram und Zeugs hier, und natürlich auch vieles mehr und so.");
 		productData.setLocation("Gerwigstraße 1, 78120 Furtwangen im Schwarzwald");
 		productData.setPrice(1.30f);
+		productData.setState(StateEnum.ALMNEW);
 		dbcontent.add(productData);
 		
 		productData = new ProductListItem();
@@ -31,7 +32,7 @@ public class DummyDatabase {
 
 		productData = new ProductListItem();
 		productData.setDescription("Bla");
-		productData.setLocation("Allmendweg 2, Vöhrenbach");
+		productData.setLocation("Allmendweg 2, 78147 Vöhrenbach");
 		productData.setPrice(667.77f);
 		dbcontent.add(productData);
 
@@ -54,4 +55,7 @@ public class DummyDatabase {
 		return results;
 	}
 
+	public ProductListItem getItem(int id) {
+		return dbcontent.get(id);
+	}
 }

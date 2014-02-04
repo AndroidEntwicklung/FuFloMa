@@ -1,5 +1,7 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-
+	<color name="default_color">#FFEEEEEE</color>
+    <color name="pressed_color">#FFE9D9BF</color>
+    
 </resources>

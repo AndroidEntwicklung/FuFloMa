@@ -44,6 +44,17 @@ public class ProductListAdapter extends BaseAdapter {
 
 		notifyDataSetChanged();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void addSeparatorItem(String item) {
+		ProductListItem sep = new ProductListItem();
+		sep.setDescription(item);
+
+		this.listData.add(sep);
+		mSeparatorsSet.add(this.listData.size()-1);
+
+		notifyDataSetChanged();	
+	}
 
 	@Override
 	public int getCount() {
@@ -116,10 +127,10 @@ public class ProductListAdapter extends BaseAdapter {
 		switch (type) {
 		case TYPE_ITEM:
 			holder.shortdesc.setText(listData.get(position)
-					.getShortDescription());
+					.getDescription());
 			holder.location.setText(listData.get(position).getPublicLocation());
 			holder.price.setText(form.format(price1));
-			holder.bm.setImageResource(R.id.bitmap);
+			holder.bm.setImageResource(R.drawable.produkt_maus);
 			break;
 		case TYPE_SEPARATOR:
 			holder.shortdesc.setText(listData.get(position).getDescription());

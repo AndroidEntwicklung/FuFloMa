@@ -1,6 +1,7 @@
 package com.example.fufloma;
 
 import java.util.ArrayList;
+import android.content.res.Resources;
 
 
 
@@ -67,7 +68,7 @@ public class DummyDatabase {
 		return productDB;
 	}
 	
-	public int getProductsInCityCount(String searchLocation) {
+	public int getProductsCount(String searchLocation) {
 		int count = 0;
 		
 		for (ProductListItem item: productDB)
@@ -75,6 +76,11 @@ public class DummyDatabase {
 				count++;
 		
 		return count;
+	}
+	
+	public int getCount()
+	{
+		return productDB.size();
 	}
 
 	public ProductListItem getProductItem(int id) {

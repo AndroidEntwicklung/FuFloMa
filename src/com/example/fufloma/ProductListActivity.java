@@ -19,8 +19,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -46,7 +49,6 @@ public class ProductListActivity extends Activity {
 		Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
 		Location locationA = new Location("A");
-
 		locationA.setLatitude(curLat);
 		locationA.setLongitude(curLon);
 
@@ -76,21 +78,26 @@ public class ProductListActivity extends Activity {
 
 			ProductListAdapter plAdapter = new ProductListAdapter(this, productList);
 			
-			int productsInCity = localDB.getProductsInCityCount(locName);
+			int productsInCity = localDB.getProductsCount(locName);
 			if (productsInCity > 0) {
 				plAdapter.addSeparatorItem(0, locName);
 				productsInCity++;
 			}
 			
-			Resources res = getResources();
-			plAdapter.addSeparatorItem(productsInCity, res.getString(R.string.umgebung));
+			int productsOutCity = localDB.getCount() - productsInCity;
+			if (productsOutCity > 0) {
+				Resources res = getResources();
+				plAdapter.addSeparatorItem(productsInCity, res.getString(R.string.umgebung));
+			}
+			
+			plAdapter.addSeparatorItem("Keine weiteren Ergebnisse");
 			
 			plv.setAdapter(plAdapter);
 			plv.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
-						long id) {
+						long id) {			
 					Object o = a.getItemAtPosition(position);
 					ProductListItem productData = (ProductListItem) o;
 
@@ -107,7 +114,7 @@ public class ProductListActivity extends Activity {
 					//new GetDataTask().execute();
 					refreshView.onRefreshComplete();
 				}
-			});
+			});		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

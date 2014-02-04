@@ -55,6 +55,7 @@ public class ProductListActivity extends Activity {
 			// Location locationA;
 			addresses = geoCoder.getFromLocation(curLat, curLon, 1);
 			tv_mainloc.setText(addresses.get(0).getLocality());
+			sharedPref.edit().putString("location_name", (String) tv_mainloc.getText()).commit();
 
 			final ListView lv1 = (ListView) findViewById(R.id.product_list1);
 			final ListView lv2 = (ListView) findViewById(R.id.product_list2);

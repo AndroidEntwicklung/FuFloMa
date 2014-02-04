@@ -32,54 +32,55 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
+
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 		tv_network = (TextView) findViewById(R.id.NetworkSearchInfo);
 		tv_gps = (TextView) findViewById(R.id.GpsSearchInfo);
 
 		nextIntent = new Intent(MainActivity.this, ProductListActivity.class);
-		nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		
-		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
+		nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-		sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		}
-	
+		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+				onLocationChange);
+
+		sharedPref = this.getSharedPreferences(
+				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		iv_hfu_spin = (ImageView)findViewById(R.id.hfuRotator);
-		
+
+		iv_hfu_spin = (ImageView) findViewById(R.id.hfuRotator);
+
 		iv_hfu_spin.setBackgroundResource(R.drawable.hfu_spin_animation);
 		frameAnimation = (AnimationDrawable) iv_hfu_spin.getBackground();
 		frameAnimation.start();
 
-		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, onLocationChange);
-		
+		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+				onLocationChange);
+
 		tv_gps.setText("Checking for Location ...");
-		
+
 		tv_network.setText("Checking for network connection ...");
 		tv_network.setTextColor(Color.BLACK);
-		
-		if (isNetworkAvailable())
-		{
+
+		if (isNetworkAvailable()) {
 			tv_network.setText("Network found!");
 			networkStatus = true;
-		}
-		else
-		{
+		} else {
 			tv_network.setText("No network :(");
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}
 		testSkipLocation(9.87654f, 48.3927f);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		locMgr.removeUpdates(onLocationChange);
 		frameAnimation.stop();
 	}
@@ -98,10 +99,9 @@ public class MainActivity extends Activity {
 		return (info != null);
 	}
 
-	private void testSkipLocation(float lat, float lon)
-	{
-		sharedPref.edit().putFloat("lat", lat);
-		sharedPref.edit().putFloat("lon", lon);
+	private void testSkipLocation(float lat, float lon) {
+		sharedPref.edit().putFloat("lat", lat).commit();
+		sharedPref.edit().putFloat("lon", lon).commit();
 
 		locMgr.removeUpdates(onLocationChange);
 		frameAnimation.stop();
@@ -109,13 +109,14 @@ public class MainActivity extends Activity {
 		if (networkStatus)
 			startActivity(nextIntent);
 	}
-	
-	
+
 	LocationListener onLocationChange = new LocationListener() {
 		public void onLocationChanged(Location fix) {
-			
-			sharedPref.edit().putFloat("lat", (float) fix.getLatitude()).commit();
-			sharedPref.edit().putFloat("lon", (float) fix.getLongitude()).commit();
+
+			sharedPref.edit().putFloat("lat", (float) fix.getLatitude())
+					.commit();
+			sharedPref.edit().putFloat("lon", (float) fix.getLongitude())
+					.commit();
 
 			locMgr.removeUpdates(onLocationChange);
 			frameAnimation.stop();

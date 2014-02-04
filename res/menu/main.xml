@@ -1,9 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:id="@+id/action_search"
+        android:icon="@drawable/icon_euro"
+        android:showAsAction="always"
+        android:title="Verkaufen"/>
+    
+    <item
+        android:id="@+id/action_user"
+        android:icon="@drawable/icon_profile"
+        android:showAsAction="always"
+        android:title="Benutzerkonto"/>
+    <item
+        android:id="@+id/action_help"
+        android:icon="@drawable/icon_hilfe"
+        android:showAsAction="always"
+        android:title="Hilfe"/>
 
 </menu>

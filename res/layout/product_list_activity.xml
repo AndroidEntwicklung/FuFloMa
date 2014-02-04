@@ -8,7 +8,7 @@
      <ImageView 
         android:id="@+id/dummyImg"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="500dp"
         android:background="#FFF"
         android:scaleType="centerCrop"/>
     

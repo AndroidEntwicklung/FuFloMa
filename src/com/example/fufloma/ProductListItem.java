@@ -113,7 +113,7 @@ public class ProductListItem {
 
 	public String getDistance() {
 		float km = curDistance / 1000;
-		String df = new DecimalFormat((km < 10) ? "#0.#" : "#0").format(km);
+		String df = new DecimalFormat("#0").format(km);
 
 		return df + " km";
 	}

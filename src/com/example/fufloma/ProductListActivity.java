@@ -20,6 +20,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
@@ -44,25 +46,19 @@ public class ProductListActivity extends Activity {
 
 		curLat = sharedPref.getFloat("lat", 0.0f);
 		curLon = sharedPref.getFloat("lon", 0.0f);
-
+		String locName = (String) sharedPref.getString("locName", "Stuttgart");
+		
 		DummyDatabase localDB = new DummyDatabase();
 
-		Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
 
 		Location locationA = new Location("A");
 		locationA.setLatitude(curLat);
 		locationA.setLongitude(curLon);
 
-		List<Address> addresses;
-
 		try {
-			addresses = geoCoder.getFromLocation(curLat, curLon, 1);
-			String locName = (String) addresses.get(0).getLocality();
-
-			sharedPref.edit().putString("location_name", locName).commit();
 
 			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
-
 			ArrayList<ProductListItem> productList = localDB.getProductListData();
 			
 			for (ProductListItem item : productList) {
@@ -123,7 +119,14 @@ public class ProductListActivity extends Activity {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Log.e("FuFloMa", "Bla");
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
 }

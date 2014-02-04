@@ -1,5 +1,11 @@
 package com.example.fufloma;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,6 +37,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		getActionBar().hide();		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -74,7 +82,8 @@ public class MainActivity extends Activity {
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}
-		testSkipLocation(48.050278f, 8.209167f);
+
+		//saveLocation(48.050278f, 8.209167f);
 	}
 
 	@Override
@@ -85,13 +94,6 @@ public class MainActivity extends Activity {
 		frameAnimation.stop();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	private boolean isNetworkAvailable() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 		NetworkInfo info = cm.getActiveNetworkInfo();
@@ -99,30 +101,43 @@ public class MainActivity extends Activity {
 		return (info != null);
 	}
 
-	private void testSkipLocation(float lat, float lon) {
-		sharedPref.edit().putFloat("lat", lat).commit();
-		sharedPref.edit().putFloat("lon", lon).commit();
+	private void saveLocation(double lat, double lon) {
+		List<Address> addresses = null;
+
+		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+		
+		try {
+			addresses = geoCoder.getFromLocation(lat, lon, 1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String locName = (String) addresses.get(0).getLocality();
+		sharedPref.edit().putString("locName", locName).commit();
+		
+		try {
+			addresses = geoCoder.getFromLocationName(locName, 1);
+			
+			lat = addresses.get(0).getLatitude();
+			lon = addresses.get(0).getLongitude();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
+		sharedPref.edit().putFloat("lat", (float) lat).commit();
+		sharedPref.edit().putFloat("lon", (float) lon).commit();
 
 		locMgr.removeUpdates(onLocationChange);
 		frameAnimation.stop();
 		tv_gps.setText("Location found!");
+		
 		if (networkStatus)
 			startActivity(nextIntent);
 	}
 
 	LocationListener onLocationChange = new LocationListener() {
 		public void onLocationChanged(Location fix) {
-
-			sharedPref.edit().putFloat("lat", (float) fix.getLatitude())
-					.commit();
-			sharedPref.edit().putFloat("lon", (float) fix.getLongitude())
-					.commit();
-
-			locMgr.removeUpdates(onLocationChange);
-			frameAnimation.stop();
-			tv_gps.setText("Location found!");
-			if (networkStatus)
-				startActivity(nextIntent);
+			saveLocation(fix.getLatitude(), fix.getLongitude());
 		}
 
 		public void onProviderDisabled(String provider) {

@@ -77,6 +77,9 @@ public class ProductDetailFragment extends Fragment {
 		});
 
 		// setup map button
+		productLat = product.getLocLat();
+		productLong = product.getLocLong();
+		
 		ImageButton imageButton = (ImageButton) fragView
 				.findViewById(R.id.mapButton);
 		imageButton.setOnClickListener(new View.OnClickListener() {
@@ -95,8 +98,6 @@ public class ProductDetailFragment extends Fragment {
 		int sellCt = seller.getSellCt();
 		int buyCt = seller.getBuyCt();
 
-		productLat = product.getLocLat();
-		productLong = product.getLocLong();
 		String distTo = product.getDistance();
 
 		TextView txtView = (TextView) fragView.findViewById(R.id.cityRepText);

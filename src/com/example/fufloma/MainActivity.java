@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 
 		locMgr.removeUpdates(onLocationChange);
 		frameAnimation.stop();
-		tv_gps.setText("Location found!");
+		tv_gps.setText("Aktuelle Position gefunden!");
 		
 		if (networkStatus)
 			startActivity(nextIntent);

@@ -20,6 +20,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -32,13 +33,16 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class ProductListActivity extends Activity {
 	private SharedPreferences sharedPref;
 	private float curLat;
 	private float curLon;
 	private int maxItems;
-	
+
+	private boolean doubleBackToExitPressedOnce;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +54,7 @@ public class ProductListActivity extends Activity {
 		curLat = sharedPref.getFloat("lat", 0.0f);
 		curLon = sharedPref.getFloat("lon", 0.0f);
 		String locName = (String) sharedPref.getString("locName", "Stuttgart");
-		
+
 		DummyDatabase localDB = new DummyDatabase();
 
 		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
@@ -62,8 +66,9 @@ public class ProductListActivity extends Activity {
 		try {
 
 			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
-			ArrayList<ProductListItem> productList = localDB.getProductListData();
-			
+			ArrayList<ProductListItem> productList = localDB
+					.getProductListData();
+
 			for (ProductListItem item : productList) {
 				Location locationB = new Location("B");
 				locationB.setLatitude(geoCoder
@@ -76,95 +81,114 @@ public class ProductListActivity extends Activity {
 				item.setDistance(locationA.distanceTo(locationB));
 			}
 
-			ProductListAdapter plAdapter = new ProductListAdapter(this, productList);
-			
+			ProductListAdapter plAdapter = new ProductListAdapter(this,
+					productList);
+
 			int productsInCity = localDB.getProductsCount(locName);
 			if (productsInCity > 0) {
 				plAdapter.addSeparatorItem(0, locName);
 				productsInCity++;
 			}
-			
+
 			maxItems = localDB.getCount();
 			int productsOutCity = maxItems - productsInCity;
 			if (productsOutCity > 0) {
 				Resources res = getResources();
-				plAdapter.addSeparatorItem(productsInCity, res.getString(R.string.umgebung));
+				plAdapter.addSeparatorItem(productsInCity,
+						res.getString(R.string.umgebung));
 			}
-			
+
 			plAdapter.addSeparatorItem("Keine weiteren Ergebnisse");
-			
+
 			plv.setAdapter(plAdapter);
 			plv.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
-						long id) {			
+						long id) {
 					Object o = a.getItemAtPosition(position);
 					ProductListItem productData = (ProductListItem) o;
 
 					Intent myIntent = new Intent(v.getContext(),
 							ProductDetailActivity.class);
-					
+
 					myIntent.putExtra("ID", productData.getId());
 					myIntent.putExtra("maxItems", maxItems);
-					
+
 					startActivity(myIntent);
 				}
 			});
-			
+
 			plv.setOnRefreshListener(new OnRefreshListener<ListView>() {
 				@Override
 				public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-					//new GetDataTask().execute();
+					// new GetDataTask().execute();
 					refreshView.onRefreshComplete();
 				}
-			});		
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-	    return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
-        case R.id.action_sell:
-    		Intent sell = new Intent(this, SellFormActivity.class);
+		case R.id.action_sell:
+			Intent sell = new Intent(this, SellFormActivity.class);
 			startActivity(sell);
-            return true;
-        case R.id.action_user:
-            //openSettings();
-            return true;
-        case R.id.action_help:
-            helpDialog();
-            return true;
+			return true;
+		case R.id.action_user:
+			// openSettings();
+			return true;
+		case R.id.action_help:
+			helpDialog();
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void helpDialog()
-	{
+
+	private void helpDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.helpListDialog).setPositiveButton(
-				R.string.intrAlertOK,
-				new DialogInterface.OnClickListener() {
+				R.string.intrAlertOK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}
 				});
 
 		builder.create().show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (doubleBackToExitPressedOnce) {
+			super.onBackPressed();
+			
+			return;
+		}
+		this.doubleBackToExitPressedOnce = true;
+		Toast.makeText(this, "Erneut drücken zum Verlassen.",
+				Toast.LENGTH_SHORT).show();
+		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				doubleBackToExitPressedOnce = false;
+			}
+		}, 2000);
 	}
 }

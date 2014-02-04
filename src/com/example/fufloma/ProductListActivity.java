@@ -140,7 +140,8 @@ public class ProductListActivity extends Activity {
 			finish();
 			return true;
         case R.id.action_sell:
-            //openSearch();
+    		Intent sell = new Intent(this, SellFormActivity.class);
+			startActivity(sell);
             return true;
         case R.id.action_user:
             //openSettings();

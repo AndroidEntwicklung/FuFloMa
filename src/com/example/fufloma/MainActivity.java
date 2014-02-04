@@ -69,16 +69,16 @@ public class MainActivity extends Activity {
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);
 
-		tv_gps.setText("Checking for Location ...");
+		tv_gps.setText("Frage aktuelle Position ab...");
 
-		tv_network.setText("Checking for network connection ...");
+		tv_network.setText("Suche nach Netzwerkverbindung...");
 		tv_network.setTextColor(Color.BLACK);
 
 		if (isNetworkAvailable()) {
-			tv_network.setText("Network found!");
+			tv_network.setText("Netzwerkverbindung gefunden!");
 			networkStatus = true;
 		} else {
-			tv_network.setText("No network :(");
+			tv_network.setText("Keine Netzwerkverbindung :(");
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}

@@ -10,19 +10,21 @@
     <string name="intrAlert">        Vielen Dank! Der Verkäufer wurde über Ihr Interesse informiert.
         Informationen zum aktuellen Status Ihrer Anfrage erhalten Sie über das FuFloMa-Widget
         oder im Benutzerkonto. Dort können Sie Ihre Anfrage auch jederzeit zurückziehen.	</string>
-	<string name="helpDetailDialog">Auf diesem Screen sehen Sie alle wichtigen Informationen zum Produkt und zum Verkäufer.
+    <string name="helpDetailDialog">Auf diesem Screen sehen Sie alle wichtigen Informationen zum Produkt und zum Verkäufer.
 	    Wenn Sie auf das Foto klicken, können Sie es sich im Vollbildmodus ansehen. Um sich den Verkaufsort auf einer Karte
 	    anzeigen zu lassen, klicken Sie bitte auf den Button mit dem Kartensymbol. Bei Interesse am Produkt können Sie den
 	    Verkäufer über den Interesse-Button anrufen.</string>
-	<string name="helpListDialog">Auf diesem Screen sehen Sie alle Produkte, die in Ihrer Nähe angeboten werden. Die Liste ist
+    <string name="helpListDialog">Auf diesem Screen sehen Sie alle Produkte, die in Ihrer Nähe angeboten werden. Die Liste ist
 	    ist dabei nach Entfernung zu Ihrem aktuellen Standort sortiert. Wenn Sie mehr über ein Produkt erfahren möchten, klicken
 	    Sie einfach auf einen Eintrag. Wenn Sie auf den Button mit dem Eurozeichen klicken, kommen Sie zum Verkaufsformular
 	    und können selbst ein Produkt einstellen.</string>
+	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen.</string>
     <string name="intrAlertOK">Okay</string>
     <string name="gmaps_desc">Zeige Stadt auf Karte</string>
     <string name="dummy">DUMMY</string>
     <string name="title_activity_gmaps">FuFloMarkt</string>
     <string name="title_activity_product_detail">ProductDetailActivity</string>
     <string name="umgebung">Umgebung</string>
+    <string name="title_activity_sell_form">SellFormActivity</string>
 
 </resources>

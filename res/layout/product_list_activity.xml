@@ -29,7 +29,7 @@
         android:id="@+id/OtherLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Umgebung" />
+        android:text="@string/umgebung" />
 	
 	<ListView
         android:id="@+id/product_list2"

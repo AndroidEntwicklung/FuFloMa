@@ -6,6 +6,7 @@ public class ProductListItem {
 	private int shortDescriptionLength = 30;
 	private int shortLocationLength = 25;
 	
+	private int id;
 	private String description;
 	private String location;
 	private Bitmap bm;
@@ -13,6 +14,15 @@ public class ProductListItem {
 	private float curDistance;
 	private StateEnum state;
 
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int _id) {
+		this.id = _id;
+	}
+	
 	public String getDescription() {
 		return description;
 	}

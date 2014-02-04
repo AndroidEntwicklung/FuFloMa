@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,7 +27,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ProductListActivity extends Activity {
 	private SharedPreferences sharedPref;
-	private TextView tv_mainloc;
 	private float curLat;
 	private float curLon;
 
@@ -30,8 +34,6 @@ public class ProductListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.product_list_activity);
-
-		tv_mainloc = (TextView) findViewById(R.id.MainLocation);
 
 		sharedPref = this.getSharedPreferences(
 				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -50,18 +52,16 @@ public class ProductListActivity extends Activity {
 
 		List<Address> addresses;
 
-		// Log.i("FuFloMa","Blub1");
 		try {
-			// Location locationA;
 			addresses = geoCoder.getFromLocation(curLat, curLon, 1);
-			tv_mainloc.setText(addresses.get(0).getLocality());
-			sharedPref.edit().putString("location_name", (String) tv_mainloc.getText()).commit();
+			String locName = (String) addresses.get(0).getLocality();
 
-			final ListView lv1 = (ListView) findViewById(R.id.product_list1);
-			final ListView lv2 = (ListView) findViewById(R.id.product_list2);
+			sharedPref.edit().putString("location_name", locName).commit();
 
-			ArrayList<ProductListItem> productList = localDB
-					.getProductListData(addresses.get(0).getLocality(), true);
+			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
+
+			ArrayList<ProductListItem> productList = localDB.getProductListData();
+			
 			for (ProductListItem item : productList) {
 				Location locationB = new Location("B");
 				locationB.setLatitude(geoCoder
@@ -74,43 +74,24 @@ public class ProductListActivity extends Activity {
 				item.setDistance(locationA.distanceTo(locationB));
 			}
 
-			lv1.setAdapter(new ProductListAdapter(this, productList));
-			lv1.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> a, View v, int position,
-						long id) {
-					Object o = lv1.getItemAtPosition(position);
-					ProductListItem productData = (ProductListItem) o;
-
-					Intent myIntent = new Intent(v.getContext(),
-							ProductDetailActivity.class);
-					myIntent.putExtra("ID", productData.getId());
-					startActivity(myIntent);
-				}
-			});
-
-			productList = localDB.getProductListData(addresses.get(0)
-					.getLocality(), false);
-			for (ProductListItem item : productList) {
-				Location locationB = new Location("B");
-				locationB.setLatitude(geoCoder
-						.getFromLocationName(item.getLocation(), 1).get(0)
-						.getLatitude());
-				locationB.setLongitude(geoCoder
-						.getFromLocationName(item.getLocation(), 1).get(0)
-						.getLongitude());
-
-				item.setDistance(locationA.distanceTo(locationB));
+			ProductListAdapter plAdapter = new ProductListAdapter(this, productList);
+			
+			int productsInCity = localDB.getProductsInCityCount(locName);
+			if (productsInCity > 0) {
+				plAdapter.addSeparatorItem(0, locName);
+				productsInCity++;
 			}
-
-			lv2.setAdapter(new ProductListAdapter(this, productList));
-			lv2.setOnItemClickListener(new OnItemClickListener() {
+			
+			Resources res = getResources();
+			plAdapter.addSeparatorItem(productsInCity, res.getString(R.string.umgebung));
+			
+			plv.setAdapter(plAdapter);
+			plv.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
 						long id) {
-					Object o = lv2.getItemAtPosition(position);
+					Object o = a.getItemAtPosition(position);
 					ProductListItem productData = (ProductListItem) o;
 
 					Intent myIntent = new Intent(v.getContext(),
@@ -119,8 +100,14 @@ public class ProductListActivity extends Activity {
 					startActivity(myIntent);
 				}
 			});
-
-			Log.i("FuFloMa", "Blub");
+			
+			plv.setOnRefreshListener(new OnRefreshListener<ListView>() {
+				@Override
+				public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+					//new GetDataTask().execute();
+					refreshView.onRefreshComplete();
+				}
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

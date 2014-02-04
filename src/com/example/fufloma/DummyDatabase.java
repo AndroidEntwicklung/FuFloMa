@@ -63,16 +63,18 @@ public class DummyDatabase {
 		productDB.add(productData);
 }
 	
-	public ArrayList<ProductListItem> getProductListData(String searchLocation, boolean checkBool) {
-		ArrayList<ProductListItem> results = new ArrayList<ProductListItem>();
+	public ArrayList<ProductListItem> getProductListData() {
+		return productDB;
+	}
+	
+	public int getProductsInCityCount(String searchLocation) {
+		int count = 0;
 		
 		for (ProductListItem item: productDB)
-		{
-			if (item.getLocation().contains(searchLocation) == checkBool)
-				results.add(item);
-		}
+			if (item.getLocation().contains(searchLocation))
+				count++;
 		
-		return results;
+		return count;
 	}
 
 	public ProductListItem getProductItem(int id) {

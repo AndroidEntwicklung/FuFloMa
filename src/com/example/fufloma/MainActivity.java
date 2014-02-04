@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}
-		testSkipLocation(47.983333f, 7.85f);
+		testSkipLocation(48.050278f, 8.209167f);
 	}
 
 	@Override

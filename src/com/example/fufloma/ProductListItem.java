@@ -7,6 +7,7 @@ public class ProductListItem {
 	private int shortLocationLength = 25;
 	
 	private int id;
+	private int sellerID;
 	private String description;
 	private String location;
 	private Bitmap bm;
@@ -21,6 +22,14 @@ public class ProductListItem {
 	
 	public void setId(int _id) {
 		this.id = _id;
+	}
+	
+	public int getSellerID() {
+		return sellerID;
+	}
+
+	public void setSellerID(int sellerID) {
+		this.sellerID = sellerID;
 	}
 	
 	public String getDescription() {

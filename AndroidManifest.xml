@@ -39,11 +39,7 @@
         </activity>
         <activity
             android:name="com.example.fufloma.ProductDetailFragment"
-            android:label="@string/app_name"
-            android:parentActivityName="com.example.fufloma.ProductListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fufloma.ProductListActivity" />
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name="com.example.fufloma.ProductPhotoFullActivity"
@@ -73,7 +69,11 @@
         </activity>
         <activity
             android:name="com.example.fufloma.ProductDetailActivity"
-            android:label="@string/title_activity_product_detail" >
+            android:label="@string/app_name" 
+            android:parentActivityName="com.example.fufloma.ProductListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.fufloma.ProductListActivity" />
         </activity>
     </application>
 

@@ -17,5 +17,6 @@
     
     <string name="gmaps_desc">Zeige Stadt auf Karte</string>
     <string name="dummy">DUMMY</string>
+    <string name="title_activity_gmaps">FuFloMarkt</string>
 
 </resources>

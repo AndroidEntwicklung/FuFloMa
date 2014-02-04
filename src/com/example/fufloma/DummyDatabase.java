@@ -14,7 +14,7 @@ public class DummyDatabase {
 		// USER DATABASE
 		UserListItem userData = new UserListItem();
 		userData.setId(0);
-		userData.setPhoneNr("0179-123456");
+		userData.setPhoneNr("0157-7663258469");
 		userData.setBuyCt(10);
 		userData.setSellCt(5);
 		userDB.add(userData);

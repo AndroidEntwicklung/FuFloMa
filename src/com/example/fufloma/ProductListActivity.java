@@ -10,7 +10,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
@@ -128,5 +131,39 @@ public class ProductListActivity extends Activity {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
 	    return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+        case R.id.action_sell:
+            //openSearch();
+            return true;
+        case R.id.action_user:
+            //openSettings();
+            return true;
+        case R.id.action_help:
+            helpDialog();
+            return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void helpDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.helpListDialog).setPositiveButton(
+				R.string.intrAlertOK,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+
+		builder.create().show();
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.fufloma;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ public class ProductDetailFragment extends Fragment {
 
 	private double productLat;
 	private double productLong;
+	private String phoneNumber;
 
 	public ProductDetailFragment() {
 
@@ -119,6 +121,8 @@ public class ProductDetailFragment extends Fragment {
 		stateView.setText("Zustand:\t\t" + product.getState());
 
 		// setup interest Button
+		phoneNumber = seller.getPhoneNr();
+		
 		Button intrButton = (Button) fragView.findViewById(R.id.interestButton);
 		intrButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -128,7 +132,12 @@ public class ProductDetailFragment extends Fragment {
 						R.string.intrAlertOK,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
+								// dialog.cancel();
+								
+								// call
+								Intent callIntent = new Intent(Intent.ACTION_CALL);
+								callIntent.setData(Uri.parse("tel:" + phoneNumber));
+								startActivity(callIntent);
 							}
 						});
 

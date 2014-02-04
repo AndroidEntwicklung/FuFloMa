@@ -4,6 +4,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -58,6 +60,7 @@ public class ProductDetailActivity extends FragmentActivity {
 		return true;
 	}
 
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -71,8 +74,31 @@ public class ProductDetailActivity extends FragmentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
+        case R.id.action_sell:
+            //openSearch();
+            return true;
+        case R.id.action_user:
+            //openSettings();
+            return true;
+        case R.id.action_help:
+            helpDialog();
+            return true;
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void helpDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.helpDetailDialog).setPositiveButton(
+				R.string.intrAlertOK,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+
+		builder.create().show();
 	}
 }

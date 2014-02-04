@@ -1,5 +1,7 @@
 package com.example.fufloma;
 
+import java.text.DecimalFormat;
+
 import android.graphics.Bitmap;
 
 public class ProductListItem {
@@ -61,7 +63,7 @@ public class ProductListItem {
 		String locResult = locationsplitter[locationsplitter.length-1];
 		
 		if (locResult.length() <= shortLocationLength)
-			locResult = locResult.substring(1,locResult.length()-1);
+			locResult = locResult.substring(1,locResult.length());
 		else
 			locResult = locResult.substring(1,shortLocationLength) + "...";
 		
@@ -112,7 +114,10 @@ public class ProductListItem {
 	}
 	
 	public String getDistance() {
-		return String.format("%.1f", curDistance/1000) + " km";
+		float km = curDistance/1000;
+		String df = new DecimalFormat((km < 10) ? "#0.#" : "#0").format(km);
+
+		return df + " km";
 	}
 	
 	public String getState() {

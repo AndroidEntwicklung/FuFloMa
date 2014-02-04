@@ -16,6 +16,7 @@ public class DummyDatabase {
 		userData.setPhoneNr("0179-123456");
 		userData.setBuyCt(10);
 		userData.setSellCt(5);
+		userDB.add(userData);
 		
 		// PRODUCT DATABASE
 		ProductListItem productData = new ProductListItem();

@@ -65,7 +65,7 @@
 
         <activity
             android:name="com.example.fufloma.GMapsActivity"
-            android:label="@string/title_activity_gmaps"
+            android:label="@string/app_name"
             android:parentActivityName="com.example.fufloma.ProductDetailActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

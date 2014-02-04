@@ -22,6 +22,9 @@ import android.widget.TextView;
 
 public class ProductDetailActivity extends Activity {
 	
+	private double productLat;
+	private double productLong;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,9 +32,25 @@ public class ProductDetailActivity extends Activity {
 		setContentView(R.layout.product_detail_activity);
 		setupActionBar();
 		
+		// get item ID
+		int itemID = 0;
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+
+            if (extras == null) {
+            	itemID = 0;
+            } else {
+            	itemID = extras.getInt("ID");
+            }
+        } else {
+        	itemID = (Integer) savedInstanceState.getSerializable("ID");
+        }
+		
 		// get product data
 		DummyDatabase localDB = new DummyDatabase();
-		ProductListItem product = localDB.getProductItem(0);
+		ProductListItem product = localDB.getProductItem(itemID);
+		UserListItem seller = localDB.getUserItem(product.getSellerID());
 		
         // setup product image
 		ImageView imageView = (ImageView)findViewById(R.id.product_detail_image);
@@ -58,16 +77,24 @@ public class ProductDetailActivity extends Activity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), GMapsActivity.class);
                 
-                myIntent.putExtra("lat", 48.0501);
-                myIntent.putExtra("lng", 8.2014);
+                myIntent.putExtra("lat", productLat);
+                myIntent.putExtra("lng", productLong);
                 
                 startActivity(myIntent);
             }
         });
         
         // setup city / reputation TextView
+        int sellCt = seller.getSellCt();
+        int buyCt = seller.getBuyCt();
+        
+        productLat = product.getLocLat();
+        productLong = product.getLocLong();
+		String distTo = product.getDistance();
+        
         TextView txtView = (TextView) findViewById(R.id.cityRepText);
-        txtView.setText(product.getPublicLocation() + " (8 km)\nVerkäufer:\t\t5 V / 10 K");
+        txtView.setText(product.getPublicLocation() + " (" + distTo + ")\n" + 
+        		"Verkäufer:\t\t" + sellCt + " V / " + buyCt + " K");
         
         // setup description TextView
         TextView descView = (TextView) findViewById(R.id.descText);

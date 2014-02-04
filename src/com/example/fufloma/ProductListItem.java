@@ -10,11 +10,12 @@ public class ProductListItem {
 	private int sellerID;
 	private String description;
 	private String location;
+	private double locLat;
+	private double locLong;
 	private Bitmap bm;
 	private float price;
 	private float curDistance;
 	private StateEnum state;
-
 	
 	public int getId() {
 		return id;
@@ -68,8 +69,25 @@ public class ProductListItem {
 					? locResult + " (" + getDistance() + ")"
 					: locResult;
 	}
+	
 	public void setLocation(String _location) {
 		this.location = _location;
+	}
+	
+	public void setLocLat(double locLat) {
+		this.locLat = locLat;
+	}
+
+	public double getLocLong() {
+		return locLong;
+	}
+
+	public void setLocLong(double locLong) {
+		this.locLong = locLong;
+	}
+
+	public double getLocLat() {
+		return locLat;
 	}
 
 	public Bitmap getBitmap() {

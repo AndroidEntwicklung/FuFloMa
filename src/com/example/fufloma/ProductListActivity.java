@@ -110,7 +110,7 @@ public class ProductListActivity extends Activity {
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
 						long id) {
-					Object o = lv1.getItemAtPosition(position);
+					Object o = lv2.getItemAtPosition(position);
 					ProductListItem productData = (ProductListItem) o;
 
 					Intent myIntent = new Intent(v.getContext(),

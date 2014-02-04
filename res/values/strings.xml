@@ -15,5 +15,6 @@
     <string name="dummy">DUMMY</string>
     <string name="title_activity_gmaps">FuFloMarkt</string>
     <string name="title_activity_product_detail">ProductDetailActivity</string>
+    <string name="umgebung">Umgebung</string>
 
 </resources>

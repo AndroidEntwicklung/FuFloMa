@@ -37,6 +37,7 @@ public class DummyDatabase {
 		productData.setDescription("PlaySystem 5 wie neu!");
 		productData.setLocation("Baumannstraﬂe 15, 78120 Furtwangen im Schwarzwald");
 		productData.setPrice(10.77f);
+		productData.setState(StateEnum.ALMNEW);
 		productDB.add(productData);
 
 		productData = new ProductListItem();
@@ -45,6 +46,7 @@ public class DummyDatabase {
 		productData.setDescription("Comodore C4096, bester ever");
 		productData.setLocation("Rabenstraﬂe 31, 78120 Furtwangen im Schwarzwald");
 		productData.setPrice(666.77f);
+		productData.setState(StateEnum.ALMNEW);
 		productDB.add(productData);
 
 		productData = new ProductListItem();
@@ -53,6 +55,7 @@ public class DummyDatabase {
 		productData.setDescription("Bla");
 		productData.setLocation("Allmendweg 2, 78147 Vˆhrenbach");
 		productData.setPrice(667.77f);
+		productData.setState(StateEnum.ALMNEW);
 		productDB.add(productData);
 
 		productData = new ProductListItem();
@@ -61,6 +64,7 @@ public class DummyDatabase {
 		productData.setDescription("Schrottwagen");
 		productData.setLocation("Roﬂbergstraﬂe 5, St. Georgen");
 		productData.setPrice(392.74f);
+		productData.setState(StateEnum.ALMNEW);
 		productDB.add(productData);
 }
 	

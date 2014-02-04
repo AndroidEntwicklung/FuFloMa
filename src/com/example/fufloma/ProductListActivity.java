@@ -32,7 +32,8 @@ public class ProductListActivity extends Activity {
 	private SharedPreferences sharedPref;
 	private float curLat;
 	private float curLon;
-
+	private int maxItems;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,7 +85,8 @@ public class ProductListActivity extends Activity {
 				productsInCity++;
 			}
 			
-			int productsOutCity = localDB.getCount() - productsInCity;
+			maxItems = localDB.getCount();
+			int productsOutCity = maxItems - productsInCity;
 			if (productsOutCity > 0) {
 				Resources res = getResources();
 				plAdapter.addSeparatorItem(productsInCity, res.getString(R.string.umgebung));
@@ -103,7 +105,10 @@ public class ProductListActivity extends Activity {
 
 					Intent myIntent = new Intent(v.getContext(),
 							ProductDetailActivity.class);
+					
 					myIntent.putExtra("ID", productData.getId());
+					myIntent.putExtra("maxItems", maxItems);
+					
 					startActivity(myIntent);
 				}
 			});

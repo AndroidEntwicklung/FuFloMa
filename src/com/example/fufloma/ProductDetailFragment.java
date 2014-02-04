@@ -52,7 +52,7 @@ public class ProductDetailFragment extends Fragment {
 
 		// get product data
 		DummyDatabase localDB = new DummyDatabase();
-		ProductListItem product = localDB.getProductItem(0);
+		ProductListItem product = localDB.getProductItem(itemID);
 		UserListItem seller = localDB.getUserItem(product.getSellerID());
 
 		// setup product image

@@ -24,25 +24,31 @@ public class ProductDetailActivity extends FragmentActivity {
 	
 		// get item ID
 		int itemID = 0;
+		int maxItems = 0;
 
 		if (savedInstanceState == null) {
 			Bundle extras = getIntent().getExtras();
 
 			if (extras == null) {
 				itemID = 0;
+				maxItems = 0;
 			} else {
 				itemID = extras.getInt("ID");
+				maxItems = extras.getInt("maxItems");
 			}
 		} else {
 			itemID = (Integer) savedInstanceState.getSerializable("ID");
+			maxItems = (Integer) savedInstanceState.getSerializable("maxItems");
 		}
 
 		// setup TabPager
 		TabAdapter = new TabPagerAdapter(getSupportFragmentManager());
+		TabAdapter.setItemCount(maxItems);
+		
 		Tab = (ViewPager) findViewById(R.id.pager);
 		Tab.setAdapter(TabAdapter);
 		
-		Tab.setCurrentItem(0);
+		Tab.setCurrentItem(itemID);
 	}
 
 	@Override

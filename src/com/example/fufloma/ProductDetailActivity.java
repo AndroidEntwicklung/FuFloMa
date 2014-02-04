@@ -31,7 +31,7 @@ public class ProductDetailActivity extends Activity {
 		
 		// get product data
 		DummyDatabase localDB = new DummyDatabase();
-		ProductListItem product = localDB.getItem(0);
+		ProductListItem product = localDB.getProductItem(0);
 		
         // setup product image
 		ImageView imageView = (ImageView)findViewById(R.id.product_detail_image);

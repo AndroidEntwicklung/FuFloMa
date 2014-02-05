@@ -1,5 +1,9 @@
 package com.example.fufloma;
 
+import android.annotation.SuppressLint;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum StateEnum {
     BAD("schlecht", 0),
     OKAY("in Ordnung", 1),
@@ -7,6 +11,9 @@ public enum StateEnum {
     NEW("neu/originalverpackt", 3);
     
     private String stringValue;
+    private int code;
+    
+    private static Map<Integer, StateEnum> codeToStatusMapping;
     
     private StateEnum(String toString, int value) {
         stringValue = toString;
@@ -15,5 +22,20 @@ public enum StateEnum {
     @Override
     public String toString() {
         return stringValue;
+    }
+    
+    public static StateEnum getStatus(int i) {
+        if (codeToStatusMapping == null) {
+            initMapping();
+        }
+        return codeToStatusMapping.get(i);
+    }
+ 
+    @SuppressLint("UseSparseArrays")
+	private static void initMapping() {
+        codeToStatusMapping = new HashMap<Integer, StateEnum>();
+        for (StateEnum s : values()) {
+            codeToStatusMapping.put(s.code, s);
+        }
     }
 }

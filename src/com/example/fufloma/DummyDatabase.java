@@ -1,7 +1,6 @@
 package com.example.fufloma;
 
 import java.util.ArrayList;
-import android.content.res.Resources;
 
 
 
@@ -13,13 +12,13 @@ public class DummyDatabase {
 	public DummyDatabase() {
 		// USER DATABASE
 		UserListItem userData = new UserListItem();
-		userData.setId(0);
+		userData.setId("0");
 		userData.setPhoneNr("0157-7663258469");
 		userData.setBuyCt(10);
 		userData.setSellCt(5);
 		userDB.add(userData);
 		
-		// PRODUCT DATABASE
+		/* PRODUCT DATABASE
 		ProductListItem productData = new ProductListItem();
 		productData.setId(0);
 		productData.setSellerID(0);
@@ -66,6 +65,7 @@ public class DummyDatabase {
 		productData.setPrice(392.74f);
 		productData.setState(StateEnum.ALMNEW);
 		productDB.add(productData);
+		*/
 }
 	
 	public ArrayList<ProductListItem> getProductListData() {
@@ -91,7 +91,11 @@ public class DummyDatabase {
 		return productDB.get(id);
 	}
 	
-	public UserListItem getUserItem(int id) {
-		return userDB.get(id);
+	public UserListItem getUserItem(String id) {
+		for (UserListItem u : userDB) {
+			if (u.getId().equalsIgnoreCase(id))
+			return u;
+		}
+		return null;
 	}
 }

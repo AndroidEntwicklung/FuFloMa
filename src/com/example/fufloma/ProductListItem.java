@@ -2,36 +2,36 @@ package com.example.fufloma;
 
 import java.text.DecimalFormat;
 
-import android.graphics.Bitmap;
-
 public class ProductListItem {
 	private int shortDescriptionLength = 30;
 	private int shortLocationLength = 25;
 
-	private int id;
-	private int sellerID;
+	private String id;
+	private String sellerID;
 	private String description;
 	private String location;
 	private double locLat;
-	private double locLong;
-	private Bitmap bm;
+	private double locLon;
+	private String _attachment;
 	private float price;
 	private float curDistance;
 	private StateEnum state;
+	private String _rev;
+	private String sellerId;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int _id) {
+	public void setId(String _id) {
 		this.id = _id;
 	}
 
-	public int getSellerID() {
+	public String getSellerID() {
 		return sellerID;
 	}
 
-	public void setSellerID(int sellerID) {
+	public void setSellerID(String sellerID) {
 		this.sellerID = sellerID;
 	}
 
@@ -79,24 +79,24 @@ public class ProductListItem {
 		this.locLat = locLat;
 	}
 
-	public double getLocLong() {
-		return locLong;
+	public double getLocLon() {
+		return locLon;
 	}
 
-	public void setLocLong(double locLong) {
-		this.locLong = locLong;
+	public void setLocLon(double locLon) {
+		this.locLon = locLon;
 	}
 
 	public double getLocLat() {
 		return locLat;
 	}
 
-	public Bitmap getBitmap() {
-		return bm;
+	public String getAttachment() {
+		return _attachment;
 	}
 
-	public void setBitmap(Bitmap _bm) {
-		this.bm = _bm;
+	public void setAttachment(String _attachment) {
+		this._attachment = _attachment;
 	}
 
 	public void setPrice(float _price) {
@@ -127,11 +127,25 @@ public class ProductListItem {
 	}
 
 	public String toString() {
-		boolean hasBm = false;
-		if (bm != null)
-			hasBm = true;
 
 		return "[ description=" + description + ", location=" + location
-				+ ", price=" + price + ", hasBitmap=" + hasBm + "]";
+				+ ", price=" + price + "]";
 	}
+
+	public String getRev() {
+		return _rev;
+	}
+
+	public void setRev(String _rev) {
+		this._rev = _rev;
+	}
+
+	public String getSellerId() {
+		return sellerId;
+	}
+
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
+
 }

@@ -21,7 +21,6 @@ import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,6 +35,7 @@ public class MainActivity extends Activity {
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
 	Intent nextIntent = null;
+	DataStorage dataStorage = (DataStorage) getApplication();
 
 	ImageView iv_hfu_spin = null;
 	MyAnimationDrawable frameAnimation = null;
@@ -48,6 +48,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		//dataStorage.initData();
+		
 		getActionBar().hide();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -152,7 +154,7 @@ public class MainActivity extends Activity {
 			networkStatus = false;
 		}
 
-		// saveLocation(48.050278f, 8.209167f);
+		saveLocation(48.050278f, 8.209167f);
 	}
 
 	@Override

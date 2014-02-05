@@ -28,6 +28,7 @@ public class ProductDetailFragment extends Fragment {
 	private double productLat;
 	private double productLong;
 	private String phoneNumber;
+	DataStorage dataStorage = (DataStorage) getActivity().getApplication();
 
 	public ProductDetailFragment() {
 
@@ -54,7 +55,8 @@ public class ProductDetailFragment extends Fragment {
 
 		// get product data
 		DummyDatabase localDB = new DummyDatabase();
-		ProductListItem product = localDB.getProductItem(itemID);
+		
+		ProductListItem product = dataStorage.productDB.get(itemID);
 		UserListItem seller = localDB.getUserItem(product.getSellerID());
 
 		// setup product image
@@ -80,7 +82,7 @@ public class ProductDetailFragment extends Fragment {
 
 		// setup map button
 		productLat = product.getLocLat();
-		productLong = product.getLocLong();
+		productLong = product.getLocLon();
 		
 		ImageButton imageButton = (ImageButton) fragView
 				.findViewById(R.id.mapButton);

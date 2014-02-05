@@ -37,5 +37,13 @@
             android:layout_below="@+id/getPicButton"
             android:layout_marginTop="58dp"
             android:layout_toRightOf="@+id/textView1"/>
-    
+
+        <Button
+            android:id="@+id/saveSellForm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/sellImgView"
+            android:layout_alignLeft="@+id/takePicButton"
+            android:text="Einstellen!" />
+        
 </RelativeLayout>

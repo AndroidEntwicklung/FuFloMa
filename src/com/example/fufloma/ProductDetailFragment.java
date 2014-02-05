@@ -128,12 +128,14 @@ public class ProductDetailFragment extends Fragment {
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.intrAlert).setPositiveButton(
+				builder.setMessage(R.string.intrAlert).setNegativeButton(
 						R.string.intrAlertOK,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								// dialog.cancel();
-								
+								dialog.cancel();
+							}
+						}).setPositiveButton("Anrufen", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
 								// call
 								Intent callIntent = new Intent(Intent.ACTION_CALL);
 								callIntent.setData(Uri.parse("tel:" + phoneNumber));

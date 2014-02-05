@@ -103,10 +103,8 @@ public class ProductDetailFragment extends Fragment {
 		int sellCt = seller.getSellCt();
 		int buyCt = seller.getBuyCt();
 
-		String distTo = product.getDistance();
-
 		TextView txtView = (TextView) fragView.findViewById(R.id.cityRepText);
-		txtView.setText(product.getPublicLocation() + " (" + distTo + ")\n"
+		txtView.setText(product.getPublicLocation() + "\n"
 				+ "Verkäufer:\t\t" + sellCt + " V / " + buyCt + " K");
 
 		// setup description TextView

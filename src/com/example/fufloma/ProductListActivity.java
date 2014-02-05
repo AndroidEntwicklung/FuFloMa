@@ -73,9 +73,9 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		try {
 
 			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
-			ArrayList<ProductListItem> productList = cloneList(dataStorage.productDB);
-
-			for (ProductListItem item : productList) {
+			ArrayList<ProductListItem> pL_org = dataStorage.productDB;
+			
+			for (ProductListItem item : pL_org) {
 				Location locationB = new Location("B");
 				locationB.setLatitude(geoCoder
 						.getFromLocationName(item.getLocation(), 1).get(0)
@@ -87,6 +87,7 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 				item.setDistance(locationA.distanceTo(locationB));
 			}
 
+			ArrayList<ProductListItem> productList = cloneList(pL_org);
 			ProductListAdapter plAdapter = new ProductListAdapter(this,
 					productList);
 			maxItems = dataStorage.productDB.size();

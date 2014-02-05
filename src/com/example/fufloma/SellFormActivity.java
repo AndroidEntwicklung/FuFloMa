@@ -1,26 +1,35 @@
 package com.example.fufloma;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Files;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -65,6 +74,13 @@ public class SellFormActivity extends Activity {
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 			}
 		});
+		
+		Button saveButton = (Button) findViewById(R.id.saveSellForm);
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				saveData();
+			}
+		});		
 	}
 
 	@Override
@@ -90,6 +106,8 @@ public class SellFormActivity extends Activity {
 	                      
 	         ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
 	         imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+	         
+	         fileUri = Uri.fromFile(new File(picturePath));
 	    }
 	}
 
@@ -134,6 +152,78 @@ public class SellFormActivity extends Activity {
 		return mediaFile;
 	}
 
+	public static String getMimeType(String url)
+	{
+	    String type = null;
+	    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+	    if (extension != null) {
+	        MimeTypeMap mime = MimeTypeMap.getSingleton();
+	        type = mime.getMimeTypeFromExtension(extension);
+	    }
+	    return type;
+	}
+	
+	private void saveData()
+	{
+		// encode image
+		Bitmap bm = BitmapFactory.decodeFile(fileUri.getPath());
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
+		byte[] byteArrayImage = baos.toByteArray(); 
+		
+		String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+		
+		// build JSON
+		JSONObject object_imgdata = new JSONObject();
+		JSONObject object_file = new JSONObject();
+		JSONObject object = new JSONObject();
+		
+		  try {
+			  File tmpFile = new File(fileUri.getPath());
+			  String fileName = tmpFile.getName();
+			  String fileType = getMimeType(fileUri.getPath());
+			  
+			  object_imgdata.put("content_type", fileType);
+			  object_imgdata.put("data", encodedImage.replace("\n", ""));
+			  
+			  object_file.put(fileName, object_imgdata);
+			  
+			  object.put("_attachments", object_file);
+			  object.put("description", "Testobjekt");
+		  } catch (JSONException e) {
+		    e.printStackTrace();
+		  }
+		  
+		  sendDataToDB(object);
+	}
+	
+	private void sendDataToDB(JSONObject object) {
+		/*final String URL = "/volley/resource/12";
+		// Post params to be sent to the server
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("token", "AbCdEfGh123456");
+	
+		JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
+		       new Response.Listener<JSONObject>() {
+		           @Override
+		           public void onResponse(JSONObject response) {
+		               try {
+		                   VolleyLog.v("Response:%n %s", response.toString(4));
+		               } catch (JSONException e) {
+		                   e.printStackTrace();
+		               }
+		           }
+		       }, new Response.ErrorListener() {
+		           @Override
+		           public void onErrorResponse(VolleyError error) {
+		               VolleyLog.e("Error: ", error.getMessage());
+		           }
+		       });
+	
+		// add the request object to the queue to be executed
+		ApplicationController.getInstance().addToRequestQueue(req);*/
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

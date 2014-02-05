@@ -83,7 +83,9 @@
         android:layout_alignLeft="@+id/stateSpinner"
         android:layout_below="@+id/getPicButton"
         android:layout_marginTop="25dp"
-        android:ems="10" >
+        android:ems="10"
+        android:minLines="1" >
+
     </EditText>
 
     <TextView
@@ -114,7 +116,10 @@
         android:layout_alignLeft="@id/getPicButton"
         android:layout_marginTop="2dp"
         android:ems="10"
-        android:hint="0,00" >
+        android:hint="0.00"
+        android:inputType="numberDecimal"
+        android:minLines="1" >
+
     </EditText>
 
     <TextView
@@ -132,7 +137,7 @@
         android:id="@+id/descEdit"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignLeft="@id/stateDescView"
+        android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/stateSpinner"
         android:layout_marginTop="25dp"
         android:ems="10"

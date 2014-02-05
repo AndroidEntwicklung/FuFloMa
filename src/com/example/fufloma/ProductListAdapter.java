@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProductListAdapter extends BaseAdapter {
@@ -26,8 +25,6 @@ public class ProductListAdapter extends BaseAdapter {
 	private static final int TYPE_ITEM = 0;
 	private static final int TYPE_SEPARATOR = 1;
 	private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
-	private Context context;
-	
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
 

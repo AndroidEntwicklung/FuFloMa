@@ -19,6 +19,7 @@
 	    Sie einfach auf einen Eintrag. Wenn Sie auf den Button mit dem Eurozeichen klicken, kommen Sie zum Verkaufsformular
 	    und können selbst ein Produkt einstellen.</string>
 	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen.</string>
+	<string name="insertAlert">Alle Angaben wurden erfolgreich auf Vollständigkeit geprüft. Wollen Sie den Artikel jetzt zum Verkauf anbieten?</string>
     <string name="intrAlertOK">Okay</string>
     <string name="gmaps_desc">Zeige Stadt auf Karte</string>
     <string name="dummy">DUMMY</string>

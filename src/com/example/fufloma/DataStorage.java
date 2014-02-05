@@ -16,13 +16,16 @@ import android.app.Application;
 import android.util.Log;
 
 public class DataStorage extends Application {
-
+	
+	private boolean finished = false;
+	private int requestCnt = 0;
 	private RequestQueue queue;
 	private ArrayList<String> indexListProducts = new ArrayList<String>();
 	private ArrayList<String> indexListUsers = new ArrayList<String>();
 	public ArrayList<ProductListItem> productDB = new ArrayList<ProductListItem>();
 	public ArrayList<UserListItem> userDB = new ArrayList<UserListItem>();
-	
+	private OnTaskCompleted listener;
+
 	@Override
 	public void onCreate() {
 		queue = Volley.newRequestQueue(this);
@@ -46,6 +49,7 @@ public class DataStorage extends Application {
 								JSONObject childJSONObject = jsonArray
 										.getJSONObject(i);
 								indexListProducts.add(childJSONObject.getString("id"));
+								requestDone();
 							}
 
 							// Second Request stuff
@@ -73,6 +77,7 @@ public class DataStorage extends Application {
 												temp.setAttachment(response.optJSONObject("_attachments").names().opt(0).toString());
 												Log.e("FuFloMa", temp.toString());												
 												productDB.add(temp);
+												requestDone();
 											}
 
 										}, new Response.ErrorListener() {
@@ -87,6 +92,7 @@ public class DataStorage extends Application {
 										});
 
 								queue.add(jsObjRequest);
+								requestCnt++;
 
 							}
 
@@ -104,7 +110,8 @@ public class DataStorage extends Application {
 				});
 
 		queue.add(jsObjRequestProducts);
-
+		requestCnt++;
+		
 		
 		url = "http://141.28.122.106:5984/fufloma_user/_all_docs";
 		JsonObjectRequest jsObjRequestUser = new JsonObjectRequest(
@@ -120,6 +127,7 @@ public class DataStorage extends Application {
 								JSONObject childJSONObject = jsonArray
 										.getJSONObject(i);
 								indexListUsers.add(childJSONObject.getString("id"));
+								requestDone();
 							}
 
 							// Second Request stuff
@@ -142,6 +150,7 @@ public class DataStorage extends Application {
 												temp.setSellCt(response.optInt("sellCt"));
 
 												userDB.add(temp);
+												requestDone();
 											}
 
 										}, new Response.ErrorListener() {
@@ -156,6 +165,7 @@ public class DataStorage extends Application {
 										});
 
 								queue.add(jsObjRequest);
+								requestCnt++;
 
 							}
 
@@ -173,6 +183,7 @@ public class DataStorage extends Application {
 				});
 
 		queue.add(jsObjRequestUser);
+		requestCnt++;
 
 	}
 	
@@ -196,6 +207,28 @@ public class DataStorage extends Application {
 			return u;
 		}
 		return null;
+	}
+
+
+	private void requestDone() {
+		requestCnt--;
+		
+		if (requestCnt == 0)
+			listener.onTaskCompleted();
+	}
+	
+	public boolean isFinished() {
+		return finished;
+	}
+
+
+	public OnTaskCompleted getListener() {
+		return listener;
+	}
+
+
+	public void setListener(OnTaskCompleted listener) {
+		this.listener = listener;
 	}
 
 }

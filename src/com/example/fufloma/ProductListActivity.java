@@ -29,11 +29,12 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-public class ProductListActivity extends Activity {
+public class ProductListActivity extends Activity implements OnTaskCompleted {
 	private SharedPreferences sharedPref;
 	private float curLat;
 	private float curLon;
 	private int maxItems;
+	DataStorage dataStorage;
 
 	private boolean doubleBackToExitPressedOnce;
 
@@ -47,11 +48,22 @@ public class ProductListActivity extends Activity {
 
 		curLat = sharedPref.getFloat("lat", 0.0f);
 		curLon = sharedPref.getFloat("lon", 0.0f);
+		
+		dataStorage = (DataStorage) getApplication();
+		dataStorage.setListener(this);
+	}
+	
+	public static ArrayList<ProductListItem> cloneList(ArrayList<ProductListItem> list) {
+		ArrayList<ProductListItem> clone = new ArrayList<ProductListItem>(list.size());
+	    for(ProductListItem item: list) clone.add(((ProductListItem) item).clone());
+	    return clone;
+	}
+	
+	// this is called as soon as volley is done! 
+    @Override
+    public void onTaskCompleted() {
 		String locName = (String) sharedPref.getString("locName", "Stuttgart");
 
-		//DummyDatabase localDB = new DummyDatabase();
-		DataStorage dataStorage = (DataStorage) getApplication();
-		
 		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
 
 		Location locationA = new Location("A");
@@ -61,7 +73,7 @@ public class ProductListActivity extends Activity {
 		try {
 
 			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
-			ArrayList<ProductListItem> productList = dataStorage.productDB;
+			ArrayList<ProductListItem> productList = cloneList(dataStorage.productDB);
 
 			for (ProductListItem item : productList) {
 				Location locationB = new Location("B");
@@ -77,17 +89,15 @@ public class ProductListActivity extends Activity {
 
 			ProductListAdapter plAdapter = new ProductListAdapter(this,
 					productList);
-
+			maxItems = dataStorage.productDB.size();
+			
 			int productsInCity = dataStorage.getProductCount(locName);
 			if (productsInCity > 0) {
 				plAdapter.addSeparatorItem(0, locName);
 				productsInCity++;
 			}
 
-			maxItems = dataStorage.productDB.size();
-			//Log.e("FuFloMa", (String maxItems);
-			
-			int productsOutCity = maxItems - productsInCity;
+			int productsOutCity = maxItems - Math.max(0, productsInCity-1);
 			if (productsOutCity > 0) {
 				Resources res = getResources();
 				plAdapter.addSeparatorItem(productsInCity,
@@ -126,7 +136,7 @@ public class ProductListActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

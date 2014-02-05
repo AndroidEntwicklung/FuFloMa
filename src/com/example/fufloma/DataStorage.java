@@ -22,13 +22,14 @@ public class DataStorage extends Application {
 	private RequestQueue queue;
 	private ArrayList<String> indexListProducts = new ArrayList<String>();
 	private ArrayList<String> indexListUsers = new ArrayList<String>();
-	public ArrayList<ProductListItem> productDB = new ArrayList<ProductListItem>();
-	public ArrayList<UserListItem> userDB = new ArrayList<UserListItem>();
+	public final ArrayList<ProductListItem> productDB = new ArrayList<ProductListItem>();
+	public final ArrayList<UserListItem> userDB = new ArrayList<UserListItem>();
 	private OnTaskCompleted listener;
 
 	@Override
 	public void onCreate() {
 		queue = Volley.newRequestQueue(this);
+		finished = false;
 		initData();
 	}
 	
@@ -49,7 +50,6 @@ public class DataStorage extends Application {
 								JSONObject childJSONObject = jsonArray
 										.getJSONObject(i);
 								indexListProducts.add(childJSONObject.getString("id"));
-								requestDone();
 							}
 
 							// Second Request stuff
@@ -92,10 +92,10 @@ public class DataStorage extends Application {
 										});
 
 								queue.add(jsObjRequest);
-								requestCnt++;
-
+								addedRequest();
 							}
 
+							requestDone();
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -110,7 +110,7 @@ public class DataStorage extends Application {
 				});
 
 		queue.add(jsObjRequestProducts);
-		requestCnt++;
+		addedRequest();
 		
 		
 		url = "http://141.28.122.106:5984/fufloma_user/_all_docs";
@@ -127,7 +127,6 @@ public class DataStorage extends Application {
 								JSONObject childJSONObject = jsonArray
 										.getJSONObject(i);
 								indexListUsers.add(childJSONObject.getString("id"));
-								requestDone();
 							}
 
 							// Second Request stuff
@@ -165,10 +164,10 @@ public class DataStorage extends Application {
 										});
 
 								queue.add(jsObjRequest);
-								requestCnt++;
-
+								addedRequest();
 							}
 
+							requestDone();
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -183,7 +182,7 @@ public class DataStorage extends Application {
 				});
 
 		queue.add(jsObjRequestUser);
-		requestCnt++;
+		addedRequest();
 
 	}
 	
@@ -209,12 +208,21 @@ public class DataStorage extends Application {
 		return null;
 	}
 
-
+	private void addedRequest() {
+		requestCnt++;
+		finished = false;
+	}
+	
 	private void requestDone() {
 		requestCnt--;
 		
-		if (requestCnt == 0)
-			listener.onTaskCompleted();
+		if (requestCnt == 0) {
+			finished = true;
+			
+			if (listener != null)
+				listener.onTaskCompleted();
+		}
+			
 	}
 	
 	public boolean isFinished() {
@@ -229,6 +237,8 @@ public class DataStorage extends Application {
 
 	public void setListener(OnTaskCompleted listener) {
 		this.listener = listener;
+		if (finished)
+			listener.onTaskCompleted();
 	}
 
 }

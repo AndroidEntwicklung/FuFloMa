@@ -25,6 +25,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     }
 
 	public void setItemCount(int maxItems) {
-		NUM_VIEWS = maxItems-1;
+		NUM_VIEWS = maxItems;
 	}
 }

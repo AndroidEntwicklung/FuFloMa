@@ -20,7 +20,7 @@ public class ProductListAdapter extends BaseAdapter {
 	private static final int TYPE_SEPARATOR = 1;
 	private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 
-	private ArrayList<ProductListItem> listData;
+	private final ArrayList<ProductListItem> listData;
 	private LayoutInflater layoutInflater;
 	NumberFormat form = NumberFormat
 			.getCurrencyInstance(new Locale("de", "DE"));

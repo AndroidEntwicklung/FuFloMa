@@ -12,8 +12,7 @@ public enum StateEnum {
     
     private String stringValue;
     private int code;
-    
-    private static Map<Integer, StateEnum> codeToStatusMapping;
+
     
     private StateEnum(String toString, int value) {
         stringValue = toString;
@@ -25,17 +24,6 @@ public enum StateEnum {
     }
     
     public static StateEnum getStatus(int i) {
-        if (codeToStatusMapping == null) {
-            initMapping();
-        }
-        return codeToStatusMapping.get(i);
-    }
- 
-    @SuppressLint("UseSparseArrays")
-	private static void initMapping() {
-        codeToStatusMapping = new HashMap<Integer, StateEnum>();
-        for (StateEnum s : values()) {
-            codeToStatusMapping.put(s.code, s);
-        }
+        return StateEnum.values()[i];
     }
 }

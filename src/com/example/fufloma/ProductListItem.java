@@ -7,7 +7,6 @@ public class ProductListItem {
 	private int shortLocationLength = 25;
 
 	private String id;
-	private String sellerID;
 	private String description;
 	private String location;
 	private double locLat;
@@ -19,20 +18,30 @@ public class ProductListItem {
 	private String _rev;
 	private String sellerId;
 
+	/* COPY! */
+	public ProductListItem clone()
+	{
+		ProductListItem aClone = new ProductListItem();
+		aClone.id = id;
+		aClone.description = description;
+		aClone.location = location;
+		aClone.locLat = locLat;
+		aClone.locLon = locLon;
+		aClone._attachment = _attachment;
+		aClone.price = price;
+		aClone.curDistance = curDistance;
+		aClone.state = state;
+		aClone._rev = _rev;
+		aClone.sellerId = sellerId;
+		return aClone;
+	}
+	
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String _id) {
 		this.id = _id;
-	}
-
-	public String getSellerID() {
-		return sellerID;
-	}
-
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
 	}
 
 	public String getDescription() {
@@ -63,10 +72,11 @@ public class ProductListItem {
 		String locResult = locationsplitter[locationsplitter.length - 1];
 
 		if (locResult.length() <= shortLocationLength)
-			locResult = locResult.substring(1, locResult.length());
+			locResult = locResult.substring(0, locResult.length());
 		else
-			locResult = locResult.substring(1, shortLocationLength) + "...";
+			locResult = locResult.substring(0, shortLocationLength) + "...";
 
+		locResult = locResult.trim();
 		return (withDist && curDistance > 0) ? locResult + " (" + getDistance()
 				+ ")" : locResult;
 	}

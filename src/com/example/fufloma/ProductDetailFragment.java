@@ -28,7 +28,7 @@ public class ProductDetailFragment extends Fragment {
 	private double productLat;
 	private double productLong;
 	private String phoneNumber;
-	DataStorage dataStorage = (DataStorage) getActivity().getApplication();
+	DataStorage dataStorage;
 
 	public ProductDetailFragment() {
 
@@ -45,6 +45,7 @@ public class ProductDetailFragment extends Fragment {
 		
 		fragView = inflater.inflate(R.layout.fragment_product_detail,
 				container, false);
+		dataStorage = (DataStorage) getActivity().getApplication();
 		
 		loadElement();
 
@@ -57,7 +58,6 @@ public class ProductDetailFragment extends Fragment {
 		//DummyDatabase localDB = new DummyDatabase();
 		
 		ProductListItem product = dataStorage.productDB.get(itemID);
-		//UserListItem seller = localDB.getUserItem(product.getSellerID());
 		UserListItem seller = dataStorage.getUserItem(product.getSellerId());
 
 		// setup product image

@@ -18,8 +18,10 @@ import android.util.Log;
 public class DataStorage extends Application {
 
 	private RequestQueue queue;
-	public ArrayList<String> indexList = new ArrayList<String>();
+	private ArrayList<String> indexListProducts = new ArrayList<String>();
+	private ArrayList<String> indexListUsers = new ArrayList<String>();
 	public ArrayList<ProductListItem> productDB = new ArrayList<ProductListItem>();
+	public ArrayList<UserListItem> userDB = new ArrayList<UserListItem>();
 	
 	@Override
 	public void onCreate() {
@@ -29,8 +31,9 @@ public class DataStorage extends Application {
 	
 	
 	public void initData() {
+		queue.getCache().clear();
 		String url = "http://141.28.122.106:5984/fufloma/_all_docs";
-		JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+		JsonObjectRequest jsObjRequestProducts = new JsonObjectRequest(
 				Request.Method.GET, url, null,
 				new Response.Listener<JSONObject>() {
 
@@ -42,12 +45,12 @@ public class DataStorage extends Application {
 							for (int i = 0; i < jsonArray.length(); i++) {
 								JSONObject childJSONObject = jsonArray
 										.getJSONObject(i);
-								indexList.add(childJSONObject.getString("id"));
+								indexListProducts.add(childJSONObject.getString("id"));
 							}
 
 							// Second Request stuff
 							String baseURL = "http://141.28.122.106:5984/fufloma/";
-							for (String id : indexList) {
+							for (String id : indexListProducts) {
 
 								JsonObjectRequest jsObjRequest = new JsonObjectRequest(
 										Request.Method.GET, baseURL + id, null,
@@ -68,7 +71,7 @@ public class DataStorage extends Application {
 												temp.setSellerId(response.optString("sellerId"));
 												temp.setState(StateEnum.getStatus(response.optInt("state")));
 												temp.setAttachment(response.optJSONObject("_attachments").names().opt(0).toString());
-												
+												Log.e("FuFloMa", temp.toString());												
 												productDB.add(temp);
 											}
 
@@ -100,7 +103,76 @@ public class DataStorage extends Application {
 					}
 				});
 
-		queue.add(jsObjRequest);
+		queue.add(jsObjRequestProducts);
+
+		
+		url = "http://141.28.122.106:5984/fufloma_user/_all_docs";
+		JsonObjectRequest jsObjRequestUser = new JsonObjectRequest(
+				Request.Method.GET, url, null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						try {
+							JSONArray jsonArray = response.getJSONArray("rows");
+							for (int i = 0; i < jsonArray.length(); i++) {
+								JSONObject childJSONObject = jsonArray
+										.getJSONObject(i);
+								indexListUsers.add(childJSONObject.getString("id"));
+							}
+
+							// Second Request stuff
+							String baseURL = "http://141.28.122.106:5984/fufloma_user/";
+							for (String id : indexListUsers) {
+
+								JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+										Request.Method.GET, baseURL + id, null,
+										new Response.Listener<JSONObject>() {
+
+											@Override
+											public void onResponse(
+													JSONObject response) {
+
+												UserListItem temp = new UserListItem();
+												temp.setId(response.optString("_id"));
+												temp.setRev(response.optString("_rev"));
+												temp.setPhoneNr(response.optString("phoneNr"));
+												temp.setBuyCt(response.optInt("buyCt"));
+												temp.setSellCt(response.optInt("sellCt"));
+
+												userDB.add(temp);
+											}
+
+										}, new Response.ErrorListener() {
+
+											@Override
+											public void onErrorResponse(
+													VolleyError error) {
+												// TODO Auto-generated method
+												// stub
+
+											}
+										});
+
+								queue.add(jsObjRequest);
+
+							}
+
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						Log.wtf("FuFloMa", "Didn't get shit!");
+					}
+				});
+
+		queue.add(jsObjRequestUser);
 
 	}
 	
@@ -116,6 +188,14 @@ public class DataStorage extends Application {
 	public int getProductCount()
 	{
 		return productDB.size();
+	}
+	
+	public UserListItem getUserItem(String id) {
+		for (UserListItem u : userDB) {
+			if (u.getId().equalsIgnoreCase(id))
+			return u;
+		}
+		return null;
 	}
 
 }

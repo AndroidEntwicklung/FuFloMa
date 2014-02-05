@@ -1,18 +1,18 @@
 package com.example.fufloma;
 
 public class UserListItem {
-	private String id;
+	private String _id;
 	private String phoneNr;
-	
+	private String _rev;
 	private int sellCt;
 	private int buyCt; 
 	
 	public String getId() {
-		return id;
+		return _id;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String _id) {
+		this._id = _id;
 	}
 	
 	public String getPhoneNr() {
@@ -37,5 +37,13 @@ public class UserListItem {
 	
 	public void setSellCt(int sellCt) {
 		this.sellCt = sellCt;
+	}
+
+	public String getRev() {
+		return _rev;
+	}
+
+	public void setRev(String _rev) {
+		this._rev = _rev;
 	}
 }

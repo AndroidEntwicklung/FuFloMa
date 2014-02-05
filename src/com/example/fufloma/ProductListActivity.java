@@ -19,6 +19,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -83,7 +84,9 @@ public class ProductListActivity extends Activity {
 				productsInCity++;
 			}
 
-			maxItems = dataStorage.getProductCount();
+			maxItems = dataStorage.productDB.size();
+			//Log.e("FuFloMa", (String maxItems);
+			
 			int productsOutCity = maxItems - productsInCity;
 			if (productsOutCity > 0) {
 				Resources res = getResources();

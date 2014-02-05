@@ -13,6 +13,9 @@ public class DataProductItem {
 	private int state;
 	
 	
+	public String toString() {
+		return "_id=[" + _id + "], _rev=[" + _rev + "], description=[" + description + "], locLat=[" + locLat + "], locLon=[" + locLon + "], location=[" + location + "], price=[" + price + "], _attachment=[" + _attachment + "], state=[" + state +"], sellerId=[" + sellerId + "]";
+	}
 	public String getId() {
 		return _id;
 	}

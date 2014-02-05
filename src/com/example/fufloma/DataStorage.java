@@ -36,6 +36,12 @@ public class DataStorage extends Application {
 	
 	public void initData() {
 		queue.getCache().clear();
+		
+		indexListProducts.clear();
+		indexListUsers.clear();
+		productDB.clear();
+		userDB.clear();
+		
 		String url = "http://141.28.122.106:5984/fufloma/_all_docs";
 		JsonObjectRequest jsObjRequestProducts = new JsonObjectRequest(
 				Request.Method.GET, url, null,

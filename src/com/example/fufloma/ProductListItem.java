@@ -132,6 +132,10 @@ public class ProductListItem {
 
 		return df + " km";
 	}
+	
+	public Float getDistanceVal() {
+		return curDistance;
+	}
 
 	public String getState() {
 		return state.toString();

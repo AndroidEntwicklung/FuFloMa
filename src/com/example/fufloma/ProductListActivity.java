@@ -2,6 +2,7 @@ package com.example.fufloma;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -17,8 +18,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +39,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 	private int maxItems;
 	DataStorage dataStorage;
 
+	private boolean dataLoaded;
+	private PullToRefreshListView mPullToRefreshLayout;
 	private boolean doubleBackToExitPressedOnce;
 
 	@Override
@@ -51,6 +56,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		
 		dataStorage = (DataStorage) getApplication();
 		dataStorage.setListener(this);
+		
+		dataLoaded = false;
 	}
 	
 	public static ArrayList<ProductListItem> cloneList(ArrayList<ProductListItem> list) {
@@ -72,7 +79,7 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 
 		try {
 
-			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
+			mPullToRefreshLayout = (PullToRefreshListView) findViewById(R.id.productLV);
 			ArrayList<ProductListItem> pL_org = dataStorage.productDB;
 			
 			for (ProductListItem item : pL_org) {
@@ -87,6 +94,10 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 				item.setDistance(locationA.distanceTo(locationB));
 			}
 
+			// sort list by distance...
+			Collections.sort(pL_org, new DistanceSort());
+			
+			// ...and then clone it so the separators don't change the database
 			ArrayList<ProductListItem> productList = cloneList(pL_org);
 			ProductListAdapter plAdapter = new ProductListAdapter(this,
 					productList);
@@ -107,8 +118,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 
 			plAdapter.addSeparatorItem("Keine weiteren Ergebnisse");
 
-			plv.setAdapter(plAdapter);
-			plv.setOnItemClickListener(new OnItemClickListener() {
+			mPullToRefreshLayout.setAdapter(plAdapter);
+			mPullToRefreshLayout.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
@@ -126,18 +137,39 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 				}
 			});
 
-			plv.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			mPullToRefreshLayout.setOnRefreshListener(new OnRefreshListener<ListView>() {
 				@Override
 				public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-					// new GetDataTask().execute();
-					refreshView.onRefreshComplete();
+					new AsyncTask<Void, Void, Void>() {
+
+			            @Override
+			            protected Void doInBackground(Void... params) {
+			                try {
+			                	dataStorage.initData();
+			                	dataLoaded = false;
+			                	while (!dataLoaded)
+			                		Thread.sleep(100);
+			                } catch (InterruptedException e) {
+			                    e.printStackTrace();
+			                }
+			                return null;
+			            }
+
+			            @Override
+			            protected void onPostExecute(Void result) {
+			                super.onPostExecute(result);
+			                mPullToRefreshLayout.onRefreshComplete();
+			            }
+			        }.execute();
 				}
 			});
+			
+			dataLoaded = true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
+   
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

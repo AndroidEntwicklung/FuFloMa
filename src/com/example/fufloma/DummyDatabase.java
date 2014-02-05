@@ -22,7 +22,7 @@ public class DummyDatabase {
 		ProductListItem productData = new ProductListItem();
 		productData.setId(0);
 		productData.setSellerID(0);
-		productData.setDescription("Gaaaaannnnnz toller kram und Zeugs hier, und natürlich auch vieles mehr und so.");
+		productData.setDescription("Gaaaaannnnnz toller kram und Zeugs hier, und natürlich auch vieles mehr und so. Einfach mal in dieses Produkt reinschauen, da gibt es viel zu erleben :) Echt jetzt! Wenn Sie Fragen haben, können Sie mir auch eine Nachricht schicken oder einfach anrufen. Das ist kein Problem, ich werde schnellstens antworten und zwar innerhalb von wenigen Wochen.");
 		productData.setLocation("Gerwigstraße 1, 78120 Furtwangen im Schwarzwald");
 		productData.setLocLat(48.0501);
 		productData.setLocLong(8.2014);

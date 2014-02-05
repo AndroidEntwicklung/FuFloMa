@@ -54,10 +54,11 @@ public class ProductDetailFragment extends Fragment {
 	private void loadElement() {
 
 		// get product data
-		DummyDatabase localDB = new DummyDatabase();
+		//DummyDatabase localDB = new DummyDatabase();
 		
 		ProductListItem product = dataStorage.productDB.get(itemID);
-		UserListItem seller = localDB.getUserItem(product.getSellerID());
+		//UserListItem seller = localDB.getUserItem(product.getSellerID());
+		UserListItem seller = dataStorage.getUserItem(product.getSellerId());
 
 		// setup product image
 		ImageView imageView = (ImageView) fragView

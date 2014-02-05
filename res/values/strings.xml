@@ -26,5 +26,11 @@
     <string name="title_activity_product_detail">ProductDetailActivity</string>
     <string name="umgebung">Umgebung</string>
     <string name="title_activity_sell_form">SellFormActivity</string>
-
+    <string-array name="state_array">
+        <item></item>
+        <item>neu/originalverpackt</item>
+        <item>wie neu</item>
+        <item>in Ordnung</item>
+        <item>schlecht</item>
+    </string-array>
 </resources>

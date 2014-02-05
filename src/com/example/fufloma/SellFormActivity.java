@@ -30,8 +30,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
@@ -49,6 +51,16 @@ public class SellFormActivity extends Activity {
 
 		setupActionBar();
 
+		// save button
+		Button saveButton = (Button) findViewById(R.id.saveSellForm);
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				
+				saveData();
+			}
+		});	
+		
+		// get pic / take pic
 		Button getPicButton = (Button) findViewById(R.id.getPicButton);
 		getPicButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -75,12 +87,14 @@ public class SellFormActivity extends Activity {
 			}
 		});
 		
-		Button saveButton = (Button) findViewById(R.id.saveSellForm);
-		saveButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				saveData();
-			}
-		});		
+		// selling place
+		
+		// state
+		Spinner spinner = (Spinner) findViewById(R.id.stateSpinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.state_array, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);	
 	}
 
 	@Override

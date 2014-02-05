@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +31,14 @@ public class MainActivity extends Activity {
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
 	Intent nextIntent = null;
+	DataStorage dataStorage = (DataStorage) getApplication();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//dataStorage.initData();
 		
 		getActionBar().hide();		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -83,7 +85,7 @@ public class MainActivity extends Activity {
 			networkStatus = false;
 		}
 
-		//saveLocation(48.050278f, 8.209167f);
+		saveLocation(48.050278f, 8.209167f);
 	}
 
 	@Override

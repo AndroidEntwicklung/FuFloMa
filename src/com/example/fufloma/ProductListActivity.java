@@ -2,7 +2,6 @@ package com.example.fufloma;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -16,22 +15,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
@@ -55,8 +48,9 @@ public class ProductListActivity extends Activity {
 		curLon = sharedPref.getFloat("lon", 0.0f);
 		String locName = (String) sharedPref.getString("locName", "Stuttgart");
 
-		DummyDatabase localDB = new DummyDatabase();
-
+		//DummyDatabase localDB = new DummyDatabase();
+		DataStorage dataStorage = (DataStorage) getApplication();
+		
 		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
 
 		Location locationA = new Location("A");
@@ -66,8 +60,7 @@ public class ProductListActivity extends Activity {
 		try {
 
 			final PullToRefreshListView plv = (PullToRefreshListView) findViewById(R.id.productLV);
-			ArrayList<ProductListItem> productList = localDB
-					.getProductListData();
+			ArrayList<ProductListItem> productList = dataStorage.productDB;
 
 			for (ProductListItem item : productList) {
 				Location locationB = new Location("B");
@@ -84,13 +77,13 @@ public class ProductListActivity extends Activity {
 			ProductListAdapter plAdapter = new ProductListAdapter(this,
 					productList);
 
-			int productsInCity = localDB.getProductsCount(locName);
+			int productsInCity = dataStorage.getProductCount(locName);
 			if (productsInCity > 0) {
 				plAdapter.addSeparatorItem(0, locName);
 				productsInCity++;
 			}
 
-			maxItems = localDB.getCount();
+			maxItems = dataStorage.getProductCount();
 			int productsOutCity = maxItems - productsInCity;
 			if (productsOutCity > 0) {
 				Resources res = getResources();

@@ -21,10 +21,10 @@
 	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen. Bitte machen Sie ein Foto vom Produkt oder wählen
 	    Sie ein Foto aus Ihrer Smartphone-Galerie. Geben Sie außerdem eine Beschreibung (mindestens 50 Zeichen), einen Preis, den Zustand
 	    und den Artikelstandort an.</string>
-	<srting name="phoneAlert">
+	<string name="phoneAlert">
 	    Da dies Ihr erster Verkauf in FuFloMa ist, benötigen wir Ihre Handynummer. Geben Sie diese bitte in das Feld ein und
 	    klicken Sie dann auf "Bestätigen". Dieses Fenster schließt sich automatisch, sobald der Anmeldeprozess beendet ist. Vielen Dank!
-	</srting>
+	</string>
 	<string name="insertAlert">Alle Angaben wurden erfolgreich auf Vollständigkeit geprüft. Wollen Sie den Artikel jetzt zum Verkauf anbieten?</string>
     <string name="intrAlertOK">Okay</string>
     <string name="gmaps_desc">Zeige Stadt auf Karte</string>

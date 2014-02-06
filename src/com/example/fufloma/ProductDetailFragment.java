@@ -143,7 +143,7 @@ public class ProductDetailFragment extends Fragment {
 		stateView.setText("Zustand:\t\t" + product.getState());
 
 		// setup interest Button
-		phoneNumber = product.getPhoneNr();
+		phoneNumber = product.getPhoneNumber();
 
 		Button intrButton = (Button) fragView.findViewById(R.id.interestButton);
 

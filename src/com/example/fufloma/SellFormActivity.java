@@ -236,14 +236,14 @@ public class SellFormActivity extends Activity {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 
-		// File mediaStorageDir = new
-		// File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-		// "FuFloMa");
+		File mediaStorageDir = new
+		File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+		"FuFloMa");
 
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"FuFloMa");
+		//File mediaStorageDir = new File(
+		//		Environment
+		//				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+		//		"FuFloMa");
 
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
@@ -445,9 +445,6 @@ public class SellFormActivity extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
-		case R.id.action_user:
-			// openSettings();
 			return true;
 		case R.id.action_help:
 			helpDialog();

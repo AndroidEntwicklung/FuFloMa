@@ -78,9 +78,6 @@ public class ProductDetailActivity extends FragmentActivity {
     		Intent sell = new Intent(this, SellFormActivity.class);
 			startActivity(sell);
             return true;
-        case R.id.action_user:
-            //openSettings();
-            return true;
         case R.id.action_help:
             helpDialog();
             return true;

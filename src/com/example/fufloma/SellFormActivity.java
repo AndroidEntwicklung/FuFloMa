@@ -54,7 +54,8 @@ public class SellFormActivity extends Activity {
 	private DataStorage dataStorage;
 	private String phoneNumber;
 	private SharedPreferences sharedPref;
-
+	private ProductListItem productItem;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -359,6 +360,12 @@ public class SellFormActivity extends Activity {
 			return false;
 		}
 
+		productItem.setLocation(addresses.get(0).toString());
+		productItem.setDescription(descItem);
+		productItem.setPrice(Float.valueOf(priceItem));
+		productItem.setPhoneNumber(phoneNumber);
+		productItem.setSellerId((String) sharedPref.getString("imei", ""));
+		productItem.setState(StateEnum.valueOf(spinner.getSelectedItem().toString()));
 		return true;
 	}
 
@@ -393,7 +400,13 @@ public class SellFormActivity extends Activity {
 			object_file.put(fileName, object_imgdata);
 
 			object.put("_attachments", object_file);
-			object.put("description", "Testobjekt");
+			object.put("description", productItem.getDescription());
+			object.put("price", productItem.getPrice());
+			object.put("location", productItem.getLocation());
+			object.put("phoneNumber", productItem.getPhoneNumber());
+			object.put("sellerId", productItem.getSellerId());
+			object.put("state", productItem.getState());
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -405,25 +418,7 @@ public class SellFormActivity extends Activity {
 	private void sendDataToDB(JSONObject object) {
 		
 		dataStorage.newDocument(object);
-		/*
-		 * final String URL = "/volley/resource/12"; // Post params to be sent
-		 * to the server HashMap<String, String> params = new HashMap<String,
-		 * String>(); params.put("token", "AbCdEfGh123456");
-		 * 
-		 * JsonObjectRequest req = new JsonObjectRequest(URL, new
-		 * JSONObject(params), new Response.Listener<JSONObject>() {
-		 * 
-		 * @Override public void onResponse(JSONObject response) { try {
-		 * VolleyLog.v("Response:%n %s", response.toString(4)); } catch
-		 * (JSONException e) { e.printStackTrace(); } } }, new
-		 * Response.ErrorListener() {
-		 * 
-		 * @Override public void onErrorResponse(VolleyError error) {
-		 * VolleyLog.e("Error: ", error.getMessage()); } });
-		 * 
-		 * // add the request object to the queue to be executed
-		 * ApplicationController.getInstance().addToRequestQueue(req);
-		 */
+
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.telephony.TelephonyManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -65,6 +66,15 @@ public class MainActivity extends Activity {
 
 		sharedPref = this.getSharedPreferences(
 				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+		
+		// get mime ID as unique UserID
+		TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		
+		String imei = "1337";
+		if (telephonyManager.getDeviceId() != null)
+			imei = telephonyManager.getDeviceId();
+		
+		sharedPref.edit().putString("imei", imei).commit();
 
 		// screen width
 		Point size = new Point();

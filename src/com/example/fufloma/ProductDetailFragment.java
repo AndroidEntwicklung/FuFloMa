@@ -3,9 +3,12 @@ package com.example.fufloma;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +27,7 @@ public class ProductDetailFragment extends Fragment {
 	private View fragView;
 
 	private int itemID;
+	private String imeiID;
 
 	private double productLat;
 	private double productLong;
@@ -38,27 +42,30 @@ public class ProductDetailFragment extends Fragment {
 		itemID = id;
 	}
 
+	public void setIMEIID(String imei) {
+		imeiID = imei;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		fragView = inflater.inflate(R.layout.fragment_product_detail,
 				container, false);
 		dataStorage = (DataStorage) getActivity().getApplication();
-		
+
 		loadElement();
 
 		return fragView;
 	}
 
 	private void loadElement() {
-
 		// get product data
-		//DummyDatabase localDB = new DummyDatabase();
-		
 		ProductListItem product = dataStorage.productDB.get(itemID);
-		UserListItem seller = dataStorage.getUserItem(product.getSellerId());
+		String sellerID = product.getSellerId();
+
+		// UserListItem seller = dataStorage.getUserItem(product.getSellerId());
 
 		// setup product image
 		ImageView imageView = (ImageView) fragView
@@ -84,7 +91,7 @@ public class ProductDetailFragment extends Fragment {
 		// setup map button
 		productLat = product.getLocLat();
 		productLong = product.getLocLon();
-		
+
 		ImageButton imageButton = (ImageButton) fragView
 				.findViewById(R.id.mapButton);
 		imageButton.setOnClickListener(new View.OnClickListener() {
@@ -100,12 +107,12 @@ public class ProductDetailFragment extends Fragment {
 		});
 
 		// setup city / reputation TextView
-		int sellCt = seller.getSellCt();
-		int buyCt = seller.getBuyCt();
+		int sellCt = 0;// seller.getSellCt();
+		int buyCt = 0; // seller.getBuyCt();
 
 		TextView txtView = (TextView) fragView.findViewById(R.id.cityRepText);
-		txtView.setText(product.getPublicLocation() + "\n"
-				+ "Verkäufer:\t\t" + sellCt + " V / " + buyCt + " K");
+		txtView.setText(product.getPublicLocation() + "\n" + "Verkäufer:\t\t"
+				+ sellCt + " V / " + buyCt + " K");
 
 		// setup description TextView
 		TextView descView = (TextView) fragView.findViewById(R.id.descText);
@@ -122,30 +129,42 @@ public class ProductDetailFragment extends Fragment {
 		stateView.setText("Zustand:\t\t" + product.getState());
 
 		// setup interest Button
-		phoneNumber = seller.getPhoneNr();
-		
-		Button intrButton = (Button) fragView.findViewById(R.id.interestButton);
-		intrButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getActivity());
-				builder.setMessage(R.string.intrAlert).setNegativeButton(
-						R.string.intrAlertOK,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						}).setPositiveButton("Anrufen", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								// call
-								Intent callIntent = new Intent(Intent.ACTION_CALL);
-								callIntent.setData(Uri.parse("tel:" + phoneNumber));
-								startActivity(callIntent);
-							}
-						});
+		phoneNumber = product.getPhoneNr();
 
-				builder.create().show();
-			}
-		});
+		Button intrButton = (Button) fragView.findViewById(R.id.interestButton);
+
+		if (sellerID != imeiID) {
+			intrButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setMessage(R.string.intrAlert)
+							.setNegativeButton(R.string.intrAlertOK,
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									})
+							.setPositiveButton("Anrufen",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											// call
+											Intent callIntent = new Intent(
+													Intent.ACTION_CALL);
+											callIntent.setData(Uri.parse("tel:"
+													+ phoneNumber));
+											startActivity(callIntent);
+										}
+									});
+
+					builder.create().show();
+				}
+			});
+		} else
+		{
+			intrButton.setBackgroundColor(Color.GRAY);
+		}
 	}
 }

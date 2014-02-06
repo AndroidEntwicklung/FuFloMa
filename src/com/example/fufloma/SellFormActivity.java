@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +30,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +51,8 @@ public class SellFormActivity extends Activity {
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 	private Uri fileUri;
+	private String phoneNumber;
+	private SharedPreferences sharedPref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,31 +60,90 @@ public class SellFormActivity extends Activity {
 		setContentView(R.layout.activity_sell_form);
 
 		setupActionBar();
+		
+		// shared prefs
+		sharedPref = this.getSharedPreferences(
+				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+		
+		phoneNumber = (String) sharedPref.getString("phoneNumber", "-");
 
 		// save button
 		Button saveButton = (Button) findViewById(R.id.saveSellForm);
 		saveButton.setOnClickListener(new View.OnClickListener() {
+			private void showInputPhoneDialog(String number, boolean newTry)
+			{
+				AlertDialog.Builder alert = new AlertDialog.Builder(SellFormActivity.this);
+				
+				if (!newTry)
+					alert.setMessage(R.string.phoneAlert);
+				else
+					alert.setMessage("Bitte gültige Nummer eingeben!\n\n" + R.string.phoneAlert);					
+
+				// Set an EditText view to get user input 
+				final EditText input = new EditText(SellFormActivity.this);
+				alert.setView(input)
+				.setNegativeButton("Abbrechen",
+						new DialogInterface.OnClickListener() {
+							public void onClick(
+									DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton("Bestätigen",
+						new DialogInterface.OnClickListener() {
+							public void onClick(
+									DialogInterface dialog, int id) {
+								String value = input.getText().toString();
+								
+								if (isPhoneValid(value)) {
+									showValidateDialog();
+									sharedPref.edit().putString("phoneNumber", value).commit();
+								} else
+									showInputPhoneDialog(value, true);									
+							}
+						});
+
+				alert.create().show();
+			}
+			
+			private void showValidateDialog()
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						SellFormActivity.this);
+				builder.setMessage(R.string.insertAlert)
+						.setNegativeButton("Abbrechen",
+								new DialogInterface.OnClickListener() {
+									public void onClick(
+											DialogInterface dialog, int id) {
+										dialog.cancel();
+									}
+								})
+						.setPositiveButton("Eintragen",
+								new DialogInterface.OnClickListener() {
+									public void onClick(
+											DialogInterface dialog, int id) {
+										saveData();
+									}
+								});
+
+				builder.create().show();
+			}
+			
 			public void onClick(View v) {
 				if (checkData()) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							SellFormActivity.this);
-					builder.setMessage(R.string.insertAlert).setNegativeButton(
-							"Abbrechen",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									dialog.cancel();
-								}
-							}).setPositiveButton("Eintragen", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									saveData();
-								}
-							});
-
-					builder.create().show();
+					// check for phone number
+					if (phoneNumber.equals("-")) {
+						TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+						phoneNumber = tMgr.getLine1Number();
+										
+						showInputPhoneDialog(phoneNumber, false);
+					} else {
+						showValidateDialog();
+					}
 				}
 			}
-		});	
-		
+		});
+
 		// get pic / take pic
 		Button getPicButton = (Button) findViewById(R.id.getPicButton);
 		getPicButton.setOnClickListener(new View.OnClickListener() {
@@ -105,49 +170,57 @@ public class SellFormActivity extends Activity {
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 			}
 		});
-		
+
 		// selling place
 		EditText locEt = (EditText) findViewById(R.id.locationEdit);
-		
-		SharedPreferences sharedPref = this.getSharedPreferences(
-				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 		String locName = (String) sharedPref.getString("locName", "Stuttgart");
 		locEt.setText(locName);
-		
+
 		// state
 		Spinner spinner = (Spinner) findViewById(R.id.stateSpinner);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-		        R.array.state_array, android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter
+				.createFromResource(this, R.array.state_array,
+						android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);	
+		spinner.setAdapter(adapter);
 	}
 
+	static boolean isPhoneValid(String phoneNo) {
+		   String expression = "^[0-9-+]{9,15}$";
+		   CharSequence inputStr = phoneNo;
+		   Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
+		   Matcher matcher = pattern.matcher(inputStr);
+		   return (matcher.matches())? true : false;
+	}
+		
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-	        if (resultCode == RESULT_OK) {
-		         ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-		         imageView.setImageBitmap(BitmapFactory.decodeFile(fileUri.getPath()));
-	        }
-	    }
-	    
-	    if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && null != data) {
-	         Uri selectedImage = data.getData();
-	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-	 
-	         Cursor cursor = getContentResolver().query(selectedImage,
-	                 filePathColumn, null, null, null);
-	         cursor.moveToFirst();
-	 
-	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	         String picturePath = cursor.getString(columnIndex);
-	         cursor.close();
-	                      
-	         ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-	         imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-	         
-	         fileUri = Uri.fromFile(new File(picturePath));
-	    }
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
+				imageView.setImageBitmap(BitmapFactory.decodeFile(fileUri
+						.getPath()));
+			}
+		}
+
+		if (requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE
+				&& resultCode == RESULT_OK && null != data) {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+			Cursor cursor = getContentResolver().query(selectedImage,
+					filePathColumn, null, null, null);
+			cursor.moveToFirst();
+
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
+
+			ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
+			imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+			fileUri = Uri.fromFile(new File(picturePath));
+		}
 	}
 
 	/** Create a file Uri for saving an image or video */
@@ -163,7 +236,7 @@ public class SellFormActivity extends Activity {
 		// File mediaStorageDir = new
 		// File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
 		// "FuFloMa");
-		
+
 		File mediaStorageDir = new File(
 				Environment
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -191,156 +264,163 @@ public class SellFormActivity extends Activity {
 		return mediaFile;
 	}
 
-	public static String getMimeType(String url)
-	{
-	    String type = null;
-	    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-	    if (extension != null) {
-	        MimeTypeMap mime = MimeTypeMap.getSingleton();
-	        type = mime.getMimeTypeFromExtension(extension);
-	    }
-	    return type;
+	public static String getMimeType(String url) {
+		String type = null;
+		String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+		if (extension != null) {
+			MimeTypeMap mime = MimeTypeMap.getSingleton();
+			type = mime.getMimeTypeFromExtension(extension);
+		}
+		return type;
 	}
-	
-	private boolean checkData()
-	{
+
+	private boolean checkData() {
 		// image loaded?
-		if (fileUri == null)
-		{
-			Toast.makeText(this, "Sie benötigen noch ein Foto!",
-					Toast.LENGTH_SHORT).show();
+		if (fileUri == null) {
+			Toast toast = Toast.makeText(this, "Sie benötigen noch ein Foto!",
+					Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
 			return false;
 		}
-		
+
 		// location?
 		EditText locEt = (EditText) findViewById(R.id.locationEdit);
 		String locName = locEt.getText().toString();
-		
+
 		List<Address> addresses = null;
 		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
-		
+
 		try {
 			addresses = geoCoder.getFromLocationName(locName, 2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		if (addresses == null || addresses.size() == 0)
-		{
-			Toast.makeText(this, "Standort nicht gefunden, bitte prüfen!",
-					Toast.LENGTH_SHORT).show();
-			return false;			
+		if (addresses == null || addresses.size() == 0) {
+			Toast toast = Toast.makeText(this,
+					"Standort nicht gefunden, bitte prüfen!",
+					Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
+			return false;
 		}
 
-		if (addresses.size() >= 2)
-		{
-			Toast.makeText(this, "Standort nicht eindeutig, bitte exakter angeben (Postleitzahl)!",
-					Toast.LENGTH_SHORT).show();
-			return false;			
+		if (addresses.size() >= 2) {
+			Toast toast = Toast
+					.makeText(
+							this,
+							"Standort nicht eindeutig, bitte exakter angeben (Postleitzahl)!",
+							Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
+			return false;
 		}
-		
+
 		// state?
 		Spinner spinner = (Spinner) findViewById(R.id.stateSpinner);
 		String stateItem = spinner.getSelectedItem().toString();
-		
-		if (stateItem.isEmpty())
-		{
-			Toast.makeText(this, "Bitte den Zustand des Artikels angeben!",
-					Toast.LENGTH_SHORT).show();
-			return false;			
+
+		if (stateItem.isEmpty()) {
+			Toast toast = Toast.makeText(this,
+					"Bitte den Zustand des Artikels angeben!",
+					Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
+			return false;
 		}
-		
+
 		// price?
 		EditText priceEt = (EditText) findViewById(R.id.priceEdit);
 		String priceItem = priceEt.getText().toString();
-		
-		if (!isNumeric(priceItem))
-		{
-			Toast.makeText(this, "Bitte geben Sie eine gültige Zahl beim Preis ein!",
-					Toast.LENGTH_SHORT).show();
-			return false;			
+
+		if (!isNumeric(priceItem)) {
+			Toast toast = Toast.makeText(this,
+					"Bitte geben Sie eine gültige Zahl beim Preis ein!",
+					Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
+			return false;
 		}
 
 		// desciption?
 		EditText descEt = (EditText) findViewById(R.id.descEdit);
 		String descItem = descEt.getText().toString();
-		
+
 		if (descItem.isEmpty() || descItem.length() < 50) {
-			Toast.makeText(this, "Bitte geben Sie eine Beschreibung mit mindestens 50 Zeichen ein!",
-					Toast.LENGTH_SHORT).show();
-			return false;				
+			Toast toast = Toast.makeText(this,
+					"Bitte geben Sie eine Beschreibung mit mindestens 50 Zeichen ein!",
+					Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.show();
+			return false;
 		}
-		
+
 		return true;
 	}
-	
-	public static boolean isNumeric(String str)
-	{
-	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+
+	public static boolean isNumeric(String str) {
+		return str.matches("-?\\d+(\\.\\d+)?"); // match a number with optional
+												// '-' and decimal.
 	}
-	
-	private void saveData()
-	{
+
+	private void saveData() {
 		// encode image
 		Bitmap bm = BitmapFactory.decodeFile(fileUri.getPath());
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);  
-		byte[] byteArrayImage = baos.toByteArray(); 
-		
-		String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+		byte[] byteArrayImage = baos.toByteArray();
+
+		String encodedImage = Base64.encodeToString(byteArrayImage,
+				Base64.DEFAULT);
+
 		// build JSON
 		JSONObject object_imgdata = new JSONObject();
 		JSONObject object_file = new JSONObject();
 		JSONObject object = new JSONObject();
-		
-		  try {
-			  File tmpFile = new File(fileUri.getPath());
-			  String fileName = tmpFile.getName();
-			  String fileType = getMimeType(fileUri.getPath());
-			  
-			  object_imgdata.put("content_type", fileType);
-			  object_imgdata.put("data", encodedImage.replace("\n", ""));
-			  
-			  object_file.put(fileName, object_imgdata);
-			  
-			  object.put("_attachments", object_file);
-			  object.put("description", "Testobjekt");
-		  } catch (JSONException e) {
-		    e.printStackTrace();
-		  }
-		  
-		  sendDataToDB(object);
-		  finish();
+
+		try {
+			File tmpFile = new File(fileUri.getPath());
+			String fileName = tmpFile.getName();
+			String fileType = getMimeType(fileUri.getPath());
+
+			object_imgdata.put("content_type", fileType);
+			object_imgdata.put("data", encodedImage.replace("\n", ""));
+
+			object_file.put(fileName, object_imgdata);
+
+			object.put("_attachments", object_file);
+			object.put("description", "Testobjekt");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		sendDataToDB(object);
+		finish();
 	}
-	
+
 	private void sendDataToDB(JSONObject object) {
-		/*final String URL = "/volley/resource/12";
-		// Post params to be sent to the server
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("token", "AbCdEfGh123456");
-	
-		JsonObjectRequest req = new JsonObjectRequest(URL, new JSONObject(params),
-		       new Response.Listener<JSONObject>() {
-		           @Override
-		           public void onResponse(JSONObject response) {
-		               try {
-		                   VolleyLog.v("Response:%n %s", response.toString(4));
-		               } catch (JSONException e) {
-		                   e.printStackTrace();
-		               }
-		           }
-		       }, new Response.ErrorListener() {
-		           @Override
-		           public void onErrorResponse(VolleyError error) {
-		               VolleyLog.e("Error: ", error.getMessage());
-		           }
-		       });
-	
-		// add the request object to the queue to be executed
-		ApplicationController.getInstance().addToRequestQueue(req);*/
+		/*
+		 * final String URL = "/volley/resource/12"; // Post params to be sent
+		 * to the server HashMap<String, String> params = new HashMap<String,
+		 * String>(); params.put("token", "AbCdEfGh123456");
+		 * 
+		 * JsonObjectRequest req = new JsonObjectRequest(URL, new
+		 * JSONObject(params), new Response.Listener<JSONObject>() {
+		 * 
+		 * @Override public void onResponse(JSONObject response) { try {
+		 * VolleyLog.v("Response:%n %s", response.toString(4)); } catch
+		 * (JSONException e) { e.printStackTrace(); } } }, new
+		 * Response.ErrorListener() {
+		 * 
+		 * @Override public void onErrorResponse(VolleyError error) {
+		 * VolleyLog.e("Error: ", error.getMessage()); } });
+		 * 
+		 * // add the request object to the queue to be executed
+		 * ApplicationController.getInstance().addToRequestQueue(req);
+		 */
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

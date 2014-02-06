@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 public class ProductListItem {
 	private int shortDescriptionLength = 30;
 	private int shortLocationLength = 25;
+	private String baseURL = "http://141.28.122.106:5984/fufloma/";
 
 	private String id;
 	private String description;
@@ -107,6 +108,10 @@ public class ProductListItem {
 
 	public void setAttachment(String _attachment) {
 		this._attachment = _attachment;
+	}
+	
+	public String getFullAttachmentURL() {
+		return baseURL + id + "/" + _attachment;
 	}
 
 	public void setPrice(float _price) {

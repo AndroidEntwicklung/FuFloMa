@@ -1,5 +1,10 @@
 package com.example.fufloma;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -10,17 +15,15 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 
 public class ProductDetailFragment extends Fragment {
 
@@ -33,6 +36,9 @@ public class ProductDetailFragment extends Fragment {
 	private double productLong;
 	private String phoneNumber;
 	DataStorage dataStorage;
+	RequestQueue mRequestQueue;
+	ImageLoader mImageLoader;
+	Bitmap bm;
 
 	public ProductDetailFragment() {
 
@@ -50,6 +56,17 @@ public class ProductDetailFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mRequestQueue = Volley.newRequestQueue(this.getActivity());
+		mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
+		    private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
+		    public void putBitmap(String url, Bitmap bitmap) {
+		        mCache.put(url, bitmap);
+		        bm = bitmap;
+		    }
+		    public Bitmap getBitmap(String url) {
+		        return mCache.get(url);
+		    }
+		});
 
 		fragView = inflater.inflate(R.layout.fragment_product_detail,
 				container, false);
@@ -61,19 +78,16 @@ public class ProductDetailFragment extends Fragment {
 	}
 
 	private void loadElement() {
-		// get product data
 		ProductListItem product = dataStorage.productDB.get(itemID);
 		String sellerID = product.getSellerId();
 
 		// UserListItem seller = dataStorage.getUserItem(product.getSellerId());
 
 		// setup product image
-		ImageView imageView = (ImageView) fragView
+		NetworkImageView imageView = (NetworkImageView) fragView
 				.findViewById(R.id.product_detail_image);
 
-		Drawable drawable = getResources().getDrawable(R.drawable.produkt_maus);
-		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-		imageView.setImageBitmap(bitmap);
+		imageView.setImageUrl(product.getFullAttachmentURL(),mImageLoader);
 
 		Point size = new Point();
 		getActivity().getWindowManager().getDefaultDisplay().getSize(size);
@@ -83,7 +97,7 @@ public class ProductDetailFragment extends Fragment {
 			public void onClick(View v) {
 				Intent myIntent = new Intent(v.getContext(),
 						ProductPhotoFullActivity.class);
-				myIntent.putExtra("bitmapID", R.drawable.produkt_maus);
+				myIntent.putExtra("itemID", itemID);
 				startActivity(myIntent);
 			}
 		});

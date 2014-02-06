@@ -1,9 +1,5 @@
 package com.example.fufloma;
 
-import android.annotation.SuppressLint;
-import java.util.HashMap;
-import java.util.Map;
-
 public enum StateEnum {
     BAD("schlecht", 0),
     OKAY("in Ordnung", 1),
@@ -11,8 +7,6 @@ public enum StateEnum {
     NEW("neu/originalverpackt", 3);
     
     private String stringValue;
-    private int code;
-
     
     private StateEnum(String toString, int value) {
         stringValue = toString;

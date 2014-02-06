@@ -18,10 +18,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -162,7 +160,7 @@ public class MainActivity extends Activity {
 			networkStatus = false;
 		}
 
-		saveLocation(48.050278f, 8.209167f);
+		//saveLocation(48.050278d, 8.209167d);
 	}
 
 	@Override

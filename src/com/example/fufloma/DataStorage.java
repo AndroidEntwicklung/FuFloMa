@@ -49,7 +49,6 @@ public class DataStorage extends Application {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						try {
 							JSONArray jsonArray = response.getJSONArray("rows");
 							for (int i = 0; i < jsonArray.length(); i++) {
@@ -91,9 +90,6 @@ public class DataStorage extends Application {
 											@Override
 											public void onErrorResponse(
 													VolleyError error) {
-												// TODO Auto-generated method
-												// stub
-
 											}
 										});
 
@@ -110,7 +106,6 @@ public class DataStorage extends Application {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
 						Log.wtf("FuFloMa", "Didn't get shit!");
 					}
 				});
@@ -126,7 +121,6 @@ public class DataStorage extends Application {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
 						try {
 							JSONArray jsonArray = response.getJSONArray("rows");
 							for (int i = 0; i < jsonArray.length(); i++) {
@@ -163,9 +157,6 @@ public class DataStorage extends Application {
 											@Override
 											public void onErrorResponse(
 													VolleyError error) {
-												// TODO Auto-generated method
-												// stub
-
 											}
 										});
 
@@ -182,7 +173,6 @@ public class DataStorage extends Application {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
 						Log.wtf("FuFloMa", "Didn't get shit!");
 					}
 				});

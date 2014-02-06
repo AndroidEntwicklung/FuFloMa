@@ -90,6 +90,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 						.getLongitude());
 
 				item.setDistance(locationA.distanceTo(locationB));
+				item.setLocLat(locationB.getLatitude());
+				item.setLocLon(locationB.getLongitude());
 			}
 
 			// sort list by distance...

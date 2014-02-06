@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
 	Intent nextIntent = null;
-	DataStorage dataStorage = (DataStorage) getApplication();
+	DataStorage dataStorage;
 
 	ImageView iv_hfu_spin = null;
 	MyAnimationDrawable frameAnimation = null;
@@ -45,7 +45,10 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		dataStorage = (DataStorage) getApplication();
+		
+		//dataStorage.newDocument();
+		
 		getActionBar().hide();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

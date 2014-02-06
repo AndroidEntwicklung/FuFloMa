@@ -10,14 +10,15 @@ public class ProductListItem {
 	private String id;
 	private String description;
 	private String location;
-	private double locLat;
-	private double locLon;
 	private String _attachment;
 	private float price;
 	private float curDistance;
 	private StateEnum state;
 	private String _rev;
 	private String sellerId;
+	private String phoneNumber;
+	private double locLon;
+	private double locLat;
 
 	/* COPY! */
 	public ProductListItem clone()
@@ -26,17 +27,20 @@ public class ProductListItem {
 		aClone.id = id;
 		aClone.description = description;
 		aClone.location = location;
-		aClone.locLat = locLat;
-		aClone.locLon = locLon;
 		aClone._attachment = _attachment;
 		aClone.price = price;
 		aClone.curDistance = curDistance;
 		aClone.state = state;
 		aClone._rev = _rev;
 		aClone.sellerId = sellerId;
+		aClone.phoneNumber = phoneNumber;
 		return aClone;
 	}
 	
+	public String toStringFull() {
+		return "_id=[" + id + "], _rev=[" + _rev + "], description=[" + description + "], location=[" + location + "], price=[" + price + "], _attachment=[" + _attachment + "], state=[" + state +"], sellerId=[" + sellerId + "], phoneNumber=[" + phoneNumber + "]";
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -84,22 +88,6 @@ public class ProductListItem {
 
 	public void setLocation(String _location) {
 		this.location = _location;
-	}
-
-	public void setLocLat(double locLat) {
-		this.locLat = locLat;
-	}
-
-	public double getLocLon() {
-		return locLon;
-	}
-
-	public void setLocLon(double locLon) {
-		this.locLon = locLon;
-	}
-
-	public double getLocLat() {
-		return locLat;
 	}
 
 	public String getAttachment() {
@@ -165,6 +153,30 @@ public class ProductListItem {
 
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public double getLocLon() {
+		return locLon;
+	}
+
+	public void setLocLon(double locLon) {
+		this.locLon = locLon;
+	}
+
+	public double getLocLat() {
+		return locLat;
+	}
+
+	public void setLocLat(double locLat) {
+		this.locLat = locLat;
 	}
 
 }

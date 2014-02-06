@@ -47,10 +47,13 @@ public class SellFormActivity extends Activity {
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
 	private Uri fileUri;
+	private DataStorage dataStorage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		dataStorage = (DataStorage) getApplication();
 		setContentView(R.layout.activity_sell_form);
 
 		setupActionBar();
@@ -315,6 +318,8 @@ public class SellFormActivity extends Activity {
 	}
 	
 	private void sendDataToDB(JSONObject object) {
+		
+		dataStorage.newDocument(object);
 		/*final String URL = "/volley/resource/12";
 		// Post params to be sent to the server
 		HashMap<String, String> params = new HashMap<String, String>();

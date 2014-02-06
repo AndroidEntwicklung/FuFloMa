@@ -1,6 +1,8 @@
 package com.example.fufloma;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -33,6 +36,43 @@ public class DataStorage extends Application {
 		initData();
 	}
 	
+	public void newDocument(JSONObject obj) {
+		//JsonObjectRequest jsonSend = new JsonObjectRequest(Request.Method.POST,
+		//		"http://141.28.122.106:5984/fufloma/", jsonObject, null, null);
+		
+		
+		final String URL = "http://141.28.122.106:5984/fufloma/";
+		// Post params to be sent to the server
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("token", "AbCdEfGh123456");
+		params.put("token2", "AbCdasdfasdfasdfEfGh123456");
+		
+		JsonObjectRequest jsonSend = new JsonObjectRequest(URL, obj,
+		       new Response.Listener<JSONObject>() {
+		           @Override
+		           public void onResponse(JSONObject response) {
+		               try {
+		                   VolleyLog.v("Response:%n %s", response.toString(4));
+		               } catch (JSONException e) {
+		                   e.printStackTrace();
+		               }
+		           }
+		       }, new Response.ErrorListener() {
+		           @Override
+		           public void onErrorResponse(VolleyError error) {
+		               VolleyLog.e("Error: ", error.getMessage());
+		           }
+		       });
+	
+		// add the request object to the queue to be executed
+
+		
+		
+		
+		
+		
+		queue.add(jsonSend);
+	}	
 	
 	public void initData() {
 		queue.getCache().clear();
@@ -74,13 +114,12 @@ public class DataStorage extends Application {
 												temp.setRev(response.optString("_rev"));
 												temp.setDescription(response.optString("description"));
 												temp.setLocation(response.optString("location"));
-												temp.setLocLat(response.optDouble("locLat"));
-												temp.setLocLon(response.optDouble("locLon"));
 												temp.setPrice((float) response.optDouble("price"));
 												temp.setSellerId(response.optString("sellerId"));
 												temp.setState(StateEnum.getStatus(response.optInt("state")));
 												temp.setAttachment(response.optJSONObject("_attachments").names().opt(0).toString());
-												Log.e("FuFloMa", temp.toString());												
+												temp.setPhoneNumber(response.optString("phoneNumber"));
+												Log.i("FuFloMa", temp.toString());												
 												productDB.add(temp);
 												requestDone();
 											}

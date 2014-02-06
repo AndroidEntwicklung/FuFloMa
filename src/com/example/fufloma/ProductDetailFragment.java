@@ -34,6 +34,7 @@ public class ProductDetailFragment extends Fragment {
 	DataStorage dataStorage;
 	RequestQueue mRequestQueue;
 	ImageLoader mImageLoader;
+	Bitmap bm;
 
 	public ProductDetailFragment() {
 
@@ -52,6 +53,7 @@ public class ProductDetailFragment extends Fragment {
 		    private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
 		    public void putBitmap(String url, Bitmap bitmap) {
 		        mCache.put(url, bitmap);
+		        bm = bitmap;
 		    }
 		    public Bitmap getBitmap(String url) {
 		        return mCache.get(url);
@@ -69,9 +71,6 @@ public class ProductDetailFragment extends Fragment {
 
 	private void loadElement() {
 
-		// get product data
-		//DummyDatabase localDB = new DummyDatabase();
-		
 		ProductListItem product = dataStorage.productDB.get(itemID);
 		UserListItem seller = dataStorage.getUserItem(product.getSellerId());
 
@@ -79,8 +78,6 @@ public class ProductDetailFragment extends Fragment {
 		NetworkImageView imageView = (NetworkImageView) fragView
 				.findViewById(R.id.product_detail_image);
 
-		//Drawable drawable = getResources().getDrawable(R.drawable.produkt_maus);
-		//Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 		imageView.setImageUrl(product.getFullAttachmentURL(),mImageLoader);
 
 		Point size = new Point();
@@ -91,7 +88,7 @@ public class ProductDetailFragment extends Fragment {
 			public void onClick(View v) {
 				Intent myIntent = new Intent(v.getContext(),
 						ProductPhotoFullActivity.class);
-				myIntent.putExtra("bitmapID", R.drawable.produkt_maus);
+				myIntent.putExtra("itemID", itemID);
 				startActivity(myIntent);
 			}
 		});

@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
 			networkStatus = false;
 		}
 
-		saveLocation(48.050278f, 8.209167f);
+		//saveLocation(48.050278d, 8.209167d);
 	}
 
 	@Override

@@ -1,26 +1,50 @@
 package com.example.fufloma;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.support.v4.app.NavUtils;
+import android.support.v4.util.LruCache;
 
 public class ProductPhotoFullActivity extends Activity {
+	
+	private DataStorage dataStorage;
+	private RequestQueue mRequestQueue;
+	private ImageLoader mImageLoader;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Bundle extras = getIntent().getExtras();
+		dataStorage = (DataStorage) getApplication();
+		
+		mRequestQueue = Volley.newRequestQueue(this);
+		mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
+		    private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
+		    public void putBitmap(String url, Bitmap bitmap) {
+		        mCache.put(url, bitmap);
+		    }
+		    public Bitmap getBitmap(String url) {
+		        return mCache.get(url);
+		    }
+		});
+		
 		setContentView(R.layout.activity_product_photo_full);
 		setupActionBar();
 
-		final ImageView contentView = (ImageView) findViewById(R.id.fullscreen_content);
+		NetworkImageView contentView = (NetworkImageView) findViewById(R.id.fullscreen_content);
 
 		// ImageView below ActionBar
 		TypedValue tv = new TypedValue();
@@ -31,23 +55,7 @@ public class ProductPhotoFullActivity extends Activity {
 		
 		setMargins(contentView, 0, -actionBarHeight, 0, 0);
 
-		// load image
-		int bitmapID = R.drawable.app_hintergrund;
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-
-            if (extras == null) {
-            	bitmapID = 0;
-            } else {
-            	bitmapID = extras.getInt("bitmapID");
-            }
-        } else {
-        	bitmapID = (Integer) savedInstanceState.getSerializable("bitmapID");
-        }
-		
-        contentView.setImageResource(bitmapID); 
-        contentView.setScaleType(ImageView.ScaleType.FIT_XY);
+		contentView.setImageUrl(dataStorage.productDB.get(extras.getInt("itemID")).getFullAttachmentURL(),mImageLoader);
 	}
 
 	public static void setMargins (View v, int l, int t, int r, int b) {

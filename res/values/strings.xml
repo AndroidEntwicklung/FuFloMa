@@ -18,8 +18,8 @@
 	    ist dabei nach Entfernung zu Ihrem aktuellen Standort sortiert. Wenn Sie mehr über ein Produkt erfahren möchten, klicken
 	    Sie einfach auf einen Eintrag. Wenn Sie auf den Button mit dem Eurozeichen klicken, kommen Sie zum Verkaufsformular
 	    und können selbst ein Produkt einstellen.</string>
-	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen. Bitte machen Sie ein Foto vom Produkt oder wählen
-	    Sie ein Foto aus Ihrer Smartphone-Galerie. Geben Sie außerdem eine Beschreibung (mindestens 50 Zeichen), einen Preis, den Zustand
+	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen. Dazu machen Sie bitte ein Foto vom Produkt oder wählen
+	   ein Foto aus Ihrer Smartphone-Galerie aus. Geben Sie außerdem eine genaue Beschreibung (mindestens 50 Zeichen), einen Preis, den Zustand
 	    und den Artikelstandort an.</string>
 	<string name="phoneAlert">
 	    Da dies Ihr erster Verkauf in FuFloMa ist, benötigen wir Ihre Handynummer. Geben Sie diese bitte in das Feld ein und

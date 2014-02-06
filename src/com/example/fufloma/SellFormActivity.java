@@ -205,13 +205,20 @@ public class SellFormActivity extends Activity {
 		   return (matcher.matches())? true : false;
 	}
 		
+	private Bitmap scaleBitmap(Bitmap bmp)
+	{
+		int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+		Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+		return scaled;
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-				imageView.setImageBitmap(BitmapFactory.decodeFile(fileUri
-						.getPath()));
+				Bitmap scaled =  scaleBitmap(BitmapFactory.decodeFile(fileUri.getPath()));
+				imageView.setImageBitmap(scaled);
 			}
 		}
 
@@ -229,8 +236,9 @@ public class SellFormActivity extends Activity {
 			cursor.close();
 
 			ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-			imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
+			Bitmap scaled =  scaleBitmap(BitmapFactory.decodeFile(picturePath));
+			imageView.setImageBitmap(scaled);
+			
 			fileUri = Uri.fromFile(new File(picturePath));
 		}
 	}
@@ -368,12 +376,13 @@ public class SellFormActivity extends Activity {
 			return false;
 		}
 
-		productItem.setLocation(addresses.get(0).toString());
+		productItem = new ProductListItem();
+		productItem.setLocation(locName);
 		productItem.setDescription(descItem);
 		productItem.setPrice(Float.valueOf(priceItem));
 		productItem.setPhoneNumber(phoneNumber);
 		productItem.setSellerId((String) sharedPref.getString("imei", ""));
-		productItem.setState(StateEnum.valueOf(spinner.getSelectedItem().toString()));
+		productItem.setState(StateEnum.getStatus(spinner.getSelectedItemPosition()-1));
 		return true;
 	}
 
@@ -384,7 +393,7 @@ public class SellFormActivity extends Activity {
 
 	private void saveData() {
 		// encode image
-		Bitmap bm = BitmapFactory.decodeFile(fileUri.getPath());
+		Bitmap bm = scaleBitmap(BitmapFactory.decodeFile(fileUri.getPath()));
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 		byte[] byteArrayImage = baos.toByteArray();

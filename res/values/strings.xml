@@ -23,7 +23,7 @@
 	    und den Artikelstandort an.</string>
 	<string name="phoneAlert">
 	    Da dies Ihr erster Verkauf in FuFloMa ist, benötigen wir Ihre Handynummer. Geben Sie diese bitte in das Feld ein und
-	    klicken Sie dann auf "Bestätigen". Dieses Fenster schließt sich automatisch, sobald der Anmeldeprozess beendet ist. Vielen Dank!
+	    klicken Sie dann auf "Bestätigen". Dieses Fenster schließt sich, sobald der Anmeldeprozess beendet ist. Vielen Dank!
 	</string>
 	<string name="insertAlert">Alle Angaben wurden erfolgreich auf Vollständigkeit geprüft. Wollen Sie den Artikel jetzt zum Verkauf anbieten?</string>
     <string name="intrAlertOK">Okay</string>

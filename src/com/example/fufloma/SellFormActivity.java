@@ -27,10 +27,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.telephony.TelephonyManager;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -77,13 +79,19 @@ public class SellFormActivity extends Activity {
 			{
 				AlertDialog.Builder alert = new AlertDialog.Builder(SellFormActivity.this);
 				
+				Resources res = getResources();
+				String alertMsg = res.getString(R.string.phoneAlert);
+				
 				if (!newTry)
-					alert.setMessage(R.string.phoneAlert);
+					alert.setMessage(alertMsg);
 				else
-					alert.setMessage("Bitte gültige Nummer eingeben!\n\n" + R.string.phoneAlert);					
+					alert.setMessage(alertMsg + "\n\nBitte gültige Nummer eingeben!");					
 
 				// Set an EditText view to get user input 
 				final EditText input = new EditText(SellFormActivity.this);
+				input.setText(number);
+				input.setInputType(InputType.TYPE_CLASS_PHONE);
+				
 				alert.setView(input)
 				.setNegativeButton("Abbrechen",
 						new DialogInterface.OnClickListener() {
@@ -282,7 +290,7 @@ public class SellFormActivity extends Activity {
 		if (fileUri == null) {
 			Toast toast = Toast.makeText(this, "Sie benötigen noch ein Foto!",
 					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -304,7 +312,7 @@ public class SellFormActivity extends Activity {
 			Toast toast = Toast.makeText(this,
 					"Standort nicht gefunden, bitte prüfen!",
 					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -315,7 +323,7 @@ public class SellFormActivity extends Activity {
 							this,
 							"Standort nicht eindeutig, bitte exakter angeben (Postleitzahl)!",
 							Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -328,7 +336,7 @@ public class SellFormActivity extends Activity {
 			Toast toast = Toast.makeText(this,
 					"Bitte den Zustand des Artikels angeben!",
 					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -341,7 +349,7 @@ public class SellFormActivity extends Activity {
 			Toast toast = Toast.makeText(this,
 					"Bitte geben Sie eine gültige Zahl beim Preis ein!",
 					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -354,7 +362,7 @@ public class SellFormActivity extends Activity {
 			Toast toast = Toast.makeText(this,
 					"Bitte geben Sie eine Beschreibung mit mindestens 50 Zeichen ein!",
 					Toast.LENGTH_SHORT);
-			toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
 		}
@@ -371,7 +379,7 @@ public class SellFormActivity extends Activity {
 		// encode image
 		Bitmap bm = BitmapFactory.decodeFile(fileUri.getPath());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+		bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 		byte[] byteArrayImage = baos.toByteArray();
 
 		String encodedImage = Base64.encodeToString(byteArrayImage,

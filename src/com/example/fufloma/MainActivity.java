@@ -26,11 +26,14 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnTaskCompleted {
 	TextView tv_network = null;
 	TextView tv_gps = null;
 
+	boolean dataLoaded = false;
 	boolean networkStatus = false;
+	boolean locationStatus = false;
+	
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
 	Intent nextIntent = null;
@@ -46,7 +49,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		dataStorage = (DataStorage) getApplication();
+		dataStorage.setListener(this);
 		
 		//dataStorage.newDocument();
 		
@@ -163,7 +168,7 @@ public class MainActivity extends Activity {
 			networkStatus = false;
 		}
 
-		//saveLocation(48.050278d, 8.209167d);
+		saveLocation(48.050278, 8.209167);
 	}
 
 	@Override
@@ -211,7 +216,8 @@ public class MainActivity extends Activity {
 		frameAnimation.stop();
 		tv_gps.setText("Aktuelle Position gefunden!");
 
-		if (networkStatus)
+		locationStatus = true;
+		if (networkStatus && dataLoaded)
 			startActivity(nextIntent);
 	}
 
@@ -232,5 +238,13 @@ public class MainActivity extends Activity {
 			// required for interface, not used
 		}
 	};
+
+	@Override
+	public void onTaskCompleted() {
+		dataLoaded = true;
+	
+		if (networkStatus && locationStatus)
+			startActivity(nextIntent);
+	}
 
 }

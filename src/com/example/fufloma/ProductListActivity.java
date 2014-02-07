@@ -35,8 +35,10 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 	private float curLat;
 	private float curLon;
 	private int maxItems;
-	DataStorage dataStorage;
+	private DataStorage dataStorage;
+	private ArrayList<ProductListItem> pL_org;
 
+	private boolean dummyLoading;
 	private boolean dataLoaded;
 	private PullToRefreshListView mPullToRefreshLayout;
 	private boolean doubleBackToExitPressedOnce;
@@ -76,9 +78,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		locationA.setLongitude(curLon);
 
 		try {
-
 			mPullToRefreshLayout = (PullToRefreshListView) findViewById(R.id.productLV);
-			ArrayList<ProductListItem> pL_org = dataStorage.productDB;
+			pL_org = dataStorage.productDB;
 			
 			for (ProductListItem item : pL_org) {
 				Location locationB = new Location("B");
@@ -130,10 +131,18 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 					Intent myIntent = new Intent(v.getContext(),
 							ProductDetailActivity.class);
 
-					myIntent.putExtra("ID", productData.getId());
+					int ID = 0;
+					for (int i = 0; i < pL_org.size(); i++)
+						if (pL_org.get(i).getId()==productData.getId())
+						{
+							ID = i;
+							break;
+						}
+					
+					myIntent.putExtra("ID", ID);
 					myIntent.putExtra("maxItems", maxItems);
 
-					startActivity(myIntent);
+					startActivityForResult(myIntent, 2);
 				}
 			});
 
@@ -145,10 +154,16 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 			            @Override
 			            protected Void doInBackground(Void... params) {
 			                try {
-			                	dataStorage.initData();
-			                	dataLoaded = false;
-			                	while (!dataLoaded)
-			                		Thread.sleep(100);
+			                	if (!dummyLoading) {			                	
+			                		dataStorage.initData();
+			                		dataLoaded = false;
+			                		
+			                		while (!dataLoaded)
+				                		Thread.sleep(1000);
+			                	} else {
+			                		Thread.sleep(1000);
+			                		dummyLoading = false;
+			                	}
 			                } catch (InterruptedException e) {
 			                    e.printStackTrace();
 			                }
@@ -164,12 +179,23 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 				}
 			});
 			
+			dummyLoading = true;
+			mPullToRefreshLayout.setRefreshing();
+			
 			dataLoaded = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
    
+    
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	 if (requestCode == 1 && resultCode == RESULT_OK)
+    		 mPullToRefreshLayout.setRefreshing();
+    	 if (requestCode == 2 && resultCode == RESULT_OK)
+    		 mPullToRefreshLayout.setRefreshing();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,7 +213,7 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 			return true;
 		case R.id.action_sell:
 			Intent sell = new Intent(this, SellFormActivity.class);
-			startActivity(sell);
+			startActivityForResult(sell, 1);
 			return true;
 		case R.id.action_help:
 			helpDialog();

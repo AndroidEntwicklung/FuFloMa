@@ -8,13 +8,12 @@ import com.android.volley.toolbox.Volley;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,8 @@ public class ProductDetailFragment extends Fragment {
 	private View fragView;
 
 	private int itemID;
+	private String itemStr;
+	private String revID;
 	private String imeiID;
 
 	private double productLat;
@@ -81,8 +82,12 @@ public class ProductDetailFragment extends Fragment {
 		ProductListItem product = dataStorage.productDB.get(itemID);
 		String sellerID = product.getSellerId();
 
+		itemStr = product.getId();
+		revID = product.getRev();
+		
 		// UserListItem seller = dataStorage.getUserItem(product.getSellerId());
-
+		boolean productByUser = sellerID.equals(imeiID);
+		
 		// setup product image
 		NetworkImageView imageView = (NetworkImageView) fragView
 				.findViewById(R.id.product_detail_image);
@@ -125,8 +130,16 @@ public class ProductDetailFragment extends Fragment {
 		int buyCt = 0; // seller.getBuyCt();
 
 		TextView txtView = (TextView) fragView.findViewById(R.id.cityRepText);
-		txtView.setText(product.getPublicLocation() + "\n" + "Verkäufer:\t\t"
-				+ sellCt + " V / " + buyCt + " K");
+		
+		if (!productByUser)
+			txtView.setText(product.getPublicLocation() + "\n" + "Verkäufer:\t\t"
+					+ sellCt + " V / " + buyCt + " K");
+		else {
+        	String text = product.getPublicLocation() + "<br />"
+        			+ "<em>Sie sind der Verkäufer dieses Artikels</em>";
+        	txtView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+		}
+			
 
 		// setup description TextView
 		TextView descView = (TextView) fragView.findViewById(R.id.descText);
@@ -147,7 +160,7 @@ public class ProductDetailFragment extends Fragment {
 
 		Button intrButton = (Button) fragView.findViewById(R.id.interestButton);
 
-		if (sellerID != imeiID) {
+		if (!productByUser) {
 			intrButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -178,7 +191,36 @@ public class ProductDetailFragment extends Fragment {
 			});
 		} else
 		{
-			intrButton.setBackgroundColor(Color.GRAY);
+			intrButton.setBackgroundColor(Color.RED);
+			intrButton.setText("Löschen");
+			
+			intrButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setMessage("Wollen Sie den Artikel wirklich löschen?")
+							.setNegativeButton("Abbrechen",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									})
+							.setPositiveButton("Löschen",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dataStorage.deleteObj(itemStr, revID);
+											
+											Intent returnIntent = new Intent();
+											getActivity().setResult(getActivity().RESULT_OK, returnIntent);
+											getActivity().finish();
+										}
+									});
+
+					builder.create().show();
+				}
+			});
 		}
 	}
 }

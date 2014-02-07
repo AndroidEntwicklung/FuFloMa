@@ -13,7 +13,7 @@ public class ProductListItem {
 	private String _attachment;
 	private float price;
 	private float curDistance;
-	private StateEnum state;
+	private String state;
 	private String _rev;
 	private String sellerId;
 	private String phoneNumber;
@@ -129,8 +129,8 @@ public class ProductListItem {
 		return state.toString();
 	}
 
-	public void setState(StateEnum almnew) {
-		this.state = almnew;
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	public String toString() {

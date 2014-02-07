@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +46,11 @@ public class ProductDetailActivity extends FragmentActivity {
 		}
 
 		// setup TabPager
+		SharedPreferences sharedPref = this.getSharedPreferences(
+				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+		
 		TabAdapter = new TabPagerAdapter(getSupportFragmentManager());
+		TabAdapter.setIMEI((String) sharedPref.getString("imei", ""));
 		TabAdapter.setItemCount(maxItems);
 		
 		Tab = (ViewPager) findViewById(R.id.pager);

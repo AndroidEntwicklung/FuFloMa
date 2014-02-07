@@ -32,7 +32,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -45,6 +48,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SellFormActivity extends Activity {
@@ -98,6 +102,7 @@ public class SellFormActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 							public void onClick(
 									DialogInterface dialog, int id) {
+								phoneNumber = "-";
 								dialog.cancel();
 							}
 						})
@@ -195,6 +200,36 @@ public class SellFormActivity extends Activity {
 						android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+		
+		// description
+		final TextView descDescView = (TextView) findViewById(R.id.descDescCtView);
+    	String text = "<font color='#DD0000'>(0 / 1000 Zeichen)</font>";
+    	descDescView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+   
+		final EditText descEt = (EditText) findViewById(R.id.descEdit);
+		descEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            	int curLength = descEt.getEditableText().toString().length();
+            	
+            	String color = "#00BB00";
+            	if (curLength < 50)
+            		color = "#DD0000";
+            	
+            	String text = "<font color='" + color + "'>(" + curLength + " / 1000 Zeichen)</font>";
+            	descDescView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+            }
+        });
 	}
 
 	static boolean isPhoneValid(String phoneNo) {
@@ -382,7 +417,7 @@ public class SellFormActivity extends Activity {
 		productItem.setPrice(Float.valueOf(priceItem));
 		productItem.setPhoneNumber(phoneNumber);
 		productItem.setSellerId((String) sharedPref.getString("imei", ""));
-		productItem.setState(StateEnum.getStatus(spinner.getSelectedItemPosition()-1));
+		productItem.setState(StateEnum.getStatus(spinner.getSelectedItemPosition()-1).toString());
 		return true;
 	}
 
@@ -429,13 +464,15 @@ public class SellFormActivity extends Activity {
 		}
 
 		sendDataToDB(object);
+		
+		// return to list
+		Intent returnIntent = new Intent();
+		setResult(RESULT_OK, returnIntent);        
 		finish();
 	}
 
 	private void sendDataToDB(JSONObject object) {
-		
 		dataStorage.newDocument(object);
-
 	}
 
 	@Override

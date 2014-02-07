@@ -1,11 +1,11 @@
 package com.example.fufloma;
 
 public enum StateEnum {
-    BAD("schlecht", 0),
-    OKAY("in Ordnung", 1),
-    ALMNEW("wie neu", 2),
-    NEW("neu/originalverpackt", 3);
-    
+	NEW("neu/originalverpackt", 0),
+	ALMNEW("wie neu", 1),
+	OKAY("in Ordnung", 2),
+    BAD("schlecht", 3);
+
     private String stringValue;
     
     private StateEnum(String toString, int value) {

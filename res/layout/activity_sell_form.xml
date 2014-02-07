@@ -77,7 +77,7 @@
         android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/getPicButton"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:text="@string/sellLoc"
         android:textSize="12sp" />
 
@@ -87,8 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/stateSpinner"
         android:layout_below="@+id/getPicButton"
-        android:layout_marginTop="25dp"
-        android:ems="10"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
         android:inputType="textPostalAddress"
         android:minLines="1" >
 
@@ -101,17 +101,17 @@
         android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/locationEdit"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:text="@string/sellState"
         android:textSize="12sp" />
 
     <Spinner
         android:id="@+id/stateSpinner"
         android:layout_width="140dp"
-        android:layout_height="38dp"
+        android:layout_height="28dp"
         android:layout_alignRight="@id/sellImgView"
         android:layout_below="@+id/locationEdit"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:textSize="12sp"
         android:layout_toLeftOf="@id/stateDescView" />
 
@@ -123,7 +123,6 @@
         android:layout_alignLeft="@id/getPicButton"
         android:layout_marginTop="2dp"
         android:textSize="12sp"
-        android:ems="10"
         android:hint="@string/sellPrice"
         android:inputType="numberDecimal"
         android:minLines="1" >
@@ -137,7 +136,7 @@
         android:layout_alignRight="@id/getPicButton"
         android:layout_below="@+id/locationEdit"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="12dp"
         android:text="@string/sellEuro"
         android:textSize="12sp" />
 
@@ -148,9 +147,9 @@
         android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/stateSpinner"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:text="@string/sellDesc"
-        android:textSize="18sp" />
+        android:textSize="12sp" />
     
         <TextView
         android:id="@+id/descDescCtView"
@@ -159,9 +158,9 @@
         android:layout_alignRight="@id/getPicButton"
         android:layout_below="@+id/stateSpinner"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:text="@string/sellChars"
-        android:textSize="18sp" />
+        android:textSize="12sp" />
     
     <EditText
         android:id="@+id/descEdit"
@@ -169,10 +168,10 @@
         android:layout_height="fill_parent"
         android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/descDescView"
-        android:layout_marginTop="5dp"
-        android:ems="10"
+        android:layout_marginTop="3dp"
         android:gravity="top"
         android:inputType="textMultiLine"
+        android:textSize="12sp"
         android:lines="10" />
 
 </RelativeLayout>

@@ -85,7 +85,6 @@
         android:layout_alignLeft="@+id/stateSpinner"
         android:layout_below="@+id/getPicButton"
         android:layout_marginTop="25dp"
-        android:ems="10"
         android:inputType="textPostalAddress"
         android:minLines="1" >
     </EditText>
@@ -117,7 +116,6 @@
         android:layout_alignBottom="@id/stateSpinner"
         android:layout_alignLeft="@id/getPicButton"
         android:layout_marginTop="1dp"
-        android:ems="10"
         android:hint="@string/sellPrice"
         android:inputType="numberDecimal"
         android:minLines="1" >
@@ -163,7 +161,6 @@
         android:layout_alignLeft="@id/sellImgView"
         android:layout_below="@+id/descDescView"
         android:layout_marginTop="5dp"
-        android:ems="10"
         android:gravity="top"
         android:inputType="textMultiLine"
         android:lines="10" />

@@ -61,98 +61,102 @@ public class SellFormActivity extends Activity {
 	private String phoneNumber;
 	private SharedPreferences sharedPref;
 	private ProductListItem productItem;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		dataStorage = (DataStorage) getApplication();
 		setContentView(R.layout.activity_sell_form);
 
 		setupActionBar();
-		
+
 		// shared prefs
 		sharedPref = this.getSharedPreferences(
 				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		
+
 		phoneNumber = (String) sharedPref.getString("phoneNumber", "-");
 
 		// save button
 		Button saveButton = (Button) findViewById(R.id.saveSellForm);
 		saveButton.setOnClickListener(new View.OnClickListener() {
-			private void showInputPhoneDialog(String number, boolean newTry)
-			{
-				AlertDialog.Builder alert = new AlertDialog.Builder(SellFormActivity.this);
-				
+			private void showInputPhoneDialog(String number, boolean newTry) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						SellFormActivity.this);
+
 				Resources res = getResources();
 				String alertMsg = res.getString(R.string.phoneAlert);
-				
+
 				if (!newTry)
 					alert.setMessage(alertMsg);
 				else
-					alert.setMessage(alertMsg + "\n\nBitte gültige Nummer eingeben!");					
+					alert.setMessage(alertMsg
+							+ "\n\nBitte gültige Nummer eingeben!");
 
-				// Set an EditText view to get user input 
+				// Set an EditText view to get user input
 				final EditText input = new EditText(SellFormActivity.this);
 				input.setText(number);
 				input.setInputType(InputType.TYPE_CLASS_PHONE);
-				
+
 				alert.setView(input)
-				.setNegativeButton("Abbrechen",
-						new DialogInterface.OnClickListener() {
-							public void onClick(
-									DialogInterface dialog, int id) {
-								phoneNumber = "-";
-								dialog.cancel();
-							}
-						})
-				.setPositiveButton("Bestätigen",
-						new DialogInterface.OnClickListener() {
-							public void onClick(
-									DialogInterface dialog, int id) {
-								String value = input.getText().toString();
-								
-								if (isPhoneValid(value)) {
-									showValidateDialog();
-									sharedPref.edit().putString("phoneNumber", value).commit();
-								} else
-									showInputPhoneDialog(value, true);									
-							}
-						});
+						.setNegativeButton("Abbrechen",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										phoneNumber = "-";
+										dialog.cancel();
+									}
+								})
+						.setPositiveButton("Bestätigen",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										String value = input.getText()
+												.toString();
+
+										if (isPhoneValid(value)) {
+											showValidateDialog();
+											sharedPref
+													.edit()
+													.putString("phoneNumber",
+															value).commit();
+										} else
+											showInputPhoneDialog(value, true);
+									}
+								});
 
 				alert.create().show();
 			}
-			
-			private void showValidateDialog()
-			{
+
+			private void showValidateDialog() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SellFormActivity.this);
 				builder.setMessage(R.string.insertAlert)
 						.setNegativeButton("Abbrechen",
 								new DialogInterface.OnClickListener() {
-									public void onClick(
-											DialogInterface dialog, int id) {
+									public void onClick(DialogInterface dialog,
+											int id) {
 										dialog.cancel();
 									}
 								})
 						.setPositiveButton("Eintragen",
 								new DialogInterface.OnClickListener() {
-									public void onClick(
-											DialogInterface dialog, int id) {
+									public void onClick(DialogInterface dialog,
+											int id) {
 										saveData();
 									}
 								});
 
 				builder.create().show();
 			}
-			
+
 			public void onClick(View v) {
 				if (checkData()) {
 					// check for phone number
 					if (phoneNumber.equals("-")) {
-						TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+						TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 						phoneNumber = tMgr.getLine1Number();
-										
+
 						showInputPhoneDialog(phoneNumber, false);
 					} else {
 						showValidateDialog();
@@ -200,59 +204,64 @@ public class SellFormActivity extends Activity {
 						android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
-		
+
 		// description
 		final TextView descDescView = (TextView) findViewById(R.id.descDescCtView);
-    	String text = "<font color='#DD0000'>(0 / 1000 Zeichen)</font>";
-    	descDescView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-   
+		String text = "<font color='#DD0000'>(0 / 1000 Zeichen)</font>";
+		descDescView
+				.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
 		final EditText descEt = (EditText) findViewById(R.id.descEdit);
 		descEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            	int curLength = descEt.getEditableText().toString().length();
-            	
-            	String color = "#00BB00";
-            	if (curLength < 50)
-            		color = "#DD0000";
-            	
-            	String text = "<font color='" + color + "'>(" + curLength + " / 1000 Zeichen)</font>";
-            	descDescView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-            }
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				int curLength = descEt.getEditableText().toString().length();
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-            }
+				String color = "#00BB00";
+				if (curLength < 50)
+					color = "#DD0000";
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-        });
+				String text = "<font color='" + color + "'>(" + curLength
+						+ " / 1000 Zeichen)</font>";
+				descDescView.setText(Html.fromHtml(text),
+						TextView.BufferType.SPANNABLE);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 
 	static boolean isPhoneValid(String phoneNo) {
-		   String expression = "^[0-9-+]{9,15}$";
-		   CharSequence inputStr = phoneNo;
-		   Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
-		   Matcher matcher = pattern.matcher(inputStr);
-		   return (matcher.matches())? true : false;
+		String expression = "^[0-9-+]{9,15}$";
+		CharSequence inputStr = phoneNo;
+		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(inputStr);
+		return (matcher.matches()) ? true : false;
 	}
-		
-	private Bitmap scaleBitmap(Bitmap bmp)
-	{
-		int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+
+	private Bitmap scaleBitmap(Bitmap bmp) {
+		int nh = (int) (bmp.getHeight() * (512.0 / bmp.getWidth()));
 		Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 		return scaled;
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-				Bitmap scaled =  scaleBitmap(BitmapFactory.decodeFile(fileUri.getPath()));
+				Bitmap scaled = scaleBitmap(BitmapFactory.decodeFile(fileUri
+						.getPath()));
 				imageView.setImageBitmap(scaled);
 			}
 		}
@@ -271,9 +280,9 @@ public class SellFormActivity extends Activity {
 			cursor.close();
 
 			ImageView imageView = (ImageView) findViewById(R.id.sellImgView);
-			Bitmap scaled =  scaleBitmap(BitmapFactory.decodeFile(picturePath));
+			Bitmap scaled = scaleBitmap(BitmapFactory.decodeFile(picturePath));
 			imageView.setImageBitmap(scaled);
-			
+
 			fileUri = Uri.fromFile(new File(picturePath));
 		}
 	}
@@ -288,14 +297,14 @@ public class SellFormActivity extends Activity {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 
-		File mediaStorageDir = new
-		File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-		"FuFloMa");
+		File mediaStorageDir = new File(
+				this.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+				"FuFloMa");
 
-		//File mediaStorageDir = new File(
-		//		Environment
-		//				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-		//		"FuFloMa");
+		// File mediaStorageDir = new File(
+		// Environment
+		// .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+		// "FuFloMa");
 
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
@@ -403,9 +412,11 @@ public class SellFormActivity extends Activity {
 		String descItem = descEt.getText().toString();
 
 		if (descItem.isEmpty() || descItem.length() < 50) {
-			Toast toast = Toast.makeText(this,
-					"Bitte geben Sie eine Beschreibung mit mindestens 50 Zeichen ein!",
-					Toast.LENGTH_SHORT);
+			Toast toast = Toast
+					.makeText(
+							this,
+							"Bitte geben Sie eine Beschreibung mit mindestens 50 Zeichen ein!",
+							Toast.LENGTH_SHORT);
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 			return false;
@@ -417,7 +428,8 @@ public class SellFormActivity extends Activity {
 		productItem.setPrice(Float.valueOf(priceItem));
 		productItem.setPhoneNumber(phoneNumber);
 		productItem.setSellerId((String) sharedPref.getString("imei", ""));
-		productItem.setState(StateEnum.getStatus(spinner.getSelectedItemPosition()-1).toString());
+		productItem.setState(StateEnum.getStatus(
+				spinner.getSelectedItemPosition() - 1).toString());
 		return true;
 	}
 
@@ -458,16 +470,16 @@ public class SellFormActivity extends Activity {
 			object.put("phoneNumber", productItem.getPhoneNumber());
 			object.put("sellerId", productItem.getSellerId());
 			object.put("state", productItem.getState());
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 		sendDataToDB(object);
-		
+
 		// return to list
 		Intent returnIntent = new Intent();
-		setResult(RESULT_OK, returnIntent);        
+		setResult(RESULT_OK, returnIntent);
 		finish();
 	}
 

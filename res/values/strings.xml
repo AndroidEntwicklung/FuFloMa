@@ -14,18 +14,16 @@
 	    Wenn Sie auf das Foto klicken, können Sie es sich im Vollbildmodus ansehen. Um sich den Verkaufsort auf einer Karte
 	    anzeigen zu lassen, klicken Sie bitte auf den Button mit dem Kartensymbol. Bei Interesse am Produkt können Sie den
 	    Verkäufer über den Interesse-Button anrufen.</string>
-    <string name="helpListDialog">Auf diesem Screen sehen Sie alle Produkte, die in Ihrer Nähe angeboten werden. Die Liste ist
+    <string name="helpListDialog">Auf diesem Screen sehen Sie alle Produkte, die in Ihrer Umgebunrg angeboten werden. Die Liste
 	    ist dabei nach Entfernung zu Ihrem aktuellen Standort sortiert. Wenn Sie mehr über ein Produkt erfahren möchten, klicken
 	    Sie einfach auf einen Eintrag. Wenn Sie auf den Button mit dem Eurozeichen klicken, kommen Sie zum Verkaufsformular
 	    und können selbst ein Produkt einstellen.</string>
-	<string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen. Dazu machen Sie bitte ein Foto vom Produkt oder wählen
+    <string name="helpSellDialog">Hier können Sie Produkte für den Verkauf einstellen. Dazu machen Sie bitte ein Foto vom Produkt oder wählen
 	   ein Foto aus Ihrer Smartphone-Galerie aus. Geben Sie außerdem eine genaue Beschreibung (mindestens 50 Zeichen), einen Preis, den Zustand
 	    und den Artikelstandort an.</string>
-	<string name="phoneAlert">
-	    Da dies Ihr erster Verkauf in FuFloMa ist, benötigen wir Ihre Handynummer. Geben Sie diese bitte in das Feld ein und
-	    klicken Sie dann auf "Bestätigen". Dieses Fenster schließt sich, sobald der Anmeldeprozess beendet ist. Vielen Dank!
-	</string>
-	<string name="insertAlert">Alle Angaben wurden erfolgreich auf Vollständigkeit geprüft. Wollen Sie den Artikel jetzt zum Verkauf anbieten?</string>
+    <string name="phoneAlert">	    Da dies Ihr erster Verkauf in FuFloMa ist, benötigen wir Ihre Handynummer. Geben Sie diese bitte in das Feld ein und
+	    klicken Sie dann auf "Bestätigen". Dieses Fenster schließt sich, sobald der Anmeldeprozess beendet ist. Vielen Dank!</string>
+    <string name="insertAlert">Alle Angaben wurden erfolgreich auf Vollständigkeit geprüft. Wollen Sie den Artikel jetzt zum Verkauf anbieten?</string>
     <string name="intrAlertOK">Okay</string>
     <string name="gmaps_desc">Zeige Stadt auf Karte</string>
     <string name="dummy">DUMMY</string>
@@ -33,6 +31,7 @@
     <string name="title_activity_product_detail">ProductDetailActivity</string>
     <string name="umgebung">Umgebung</string>
     <string name="title_activity_sell_form">SellFormActivity</string>
+
     <string-array name="state_array">
         <item></item>
         <item>neu/originalverpackt</item>
@@ -40,4 +39,34 @@
         <item>in Ordnung</item>
         <item>schlecht</item>
     </string-array>
+
+    <string name="mainPos">Frage aktuelle Position ab…</string>
+    <string name="mainPosSuc">Aktuelle Position gefunden!</string>
+    <string name="mainNet">Suche nach Netzwerkverbindung…</string>
+    <string name="mainNetSuc">Netzwerkverbindung gefunden!</string>
+    <string name="mainNetFail">Keine Netzwerkverbindung :(</string>
+    <string name="mainData">Rufe aktuelle Daten ab…</string>
+    <string name="mainDataSuc">Aktuelle Daten abgerufen!</string>
+    <string name="spinningLogo">Logo der Hochschule Furtwangen</string>
+    <string name="noResults">Keine weiteren Ergebnisse</string>
+    <string name="pressAgain">Erneut drücken zum Verlassen.</string>
+    <string name="callBut">Anrufen</string>
+    <string name="state">Zustand</string>
+    <string name="userIsSeller">Sie sind der Verkäufer dieses Artikels</string>
+    <string name="seller">Verkäufer</string>
+    <string name="wantDelete">Wollen Sie den Artikel wirklich löschen?</string>
+    <string name="cancelBut">Abbrechen</string>
+    <string name="deleteBut">Löschen</string>
+    <string name="sellNewArt">Neuen Artikel einstellen:</string>
+    <string name="sellSubmit">Einstellen!</string>
+    <string name="sellImg">Artikelfoto</string>
+    <string name="sellCamera">Kamera</string>
+    <string name="sellDocs">Galerie</string>
+    <string name="sellLoc">Standort:</string>
+    <string name="sellState">Zustand:</string>
+    <string name="sellPrice">0.00</string>
+    <string name="sellEuro">Euro</string>
+    <string name="sellDesc">Beschreibung:</string>
+    <string name="sellChars">(0 / 1000 Zeichen)</string>
+
 </resources>

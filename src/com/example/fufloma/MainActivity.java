@@ -29,11 +29,12 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnTaskCompleted {
 	TextView tv_network = null;
 	TextView tv_gps = null;
+	TextView tv_data = null;
 
 	boolean dataLoaded = false;
 	boolean networkStatus = false;
 	boolean locationStatus = false;
-	
+
 	LocationManager locMgr = null;
 	SharedPreferences sharedPref = null;
 	Intent nextIntent = null;
@@ -49,18 +50,20 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		dataStorage = (DataStorage) getApplication();
-		dataStorage.setListener(this);
-		
-		//dataStorage.newDocument();
-		
+
 		getActionBar().hide();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+		dataStorage = (DataStorage) getApplication();
+		dataStorage.setListener(this);
+
+		sharedPref = this.getSharedPreferences(
+				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 		tv_network = (TextView) findViewById(R.id.NetworkSearchInfo);
 		tv_gps = (TextView) findViewById(R.id.GpsSearchInfo);
+		tv_data = (TextView) findViewById(R.id.DataSearchInfo);
 
 		nextIntent = new Intent(MainActivity.this, ProductListActivity.class);
 		nextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -69,16 +72,13 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);
 
-		sharedPref = this.getSharedPreferences(
-				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		
-		// get mime ID as unique UserID
-		TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-		
+		// get imei ID as unique UserID
+		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
 		String imei = "1337";
 		if (telephonyManager.getDeviceId() != null)
 			imei = telephonyManager.getDeviceId();
-		
+
 		sharedPref.edit().putString("imei", imei).commit();
 
 		// screen width
@@ -86,7 +86,7 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		getWindowManager().getDefaultDisplay().getSize(size);
 		screenWidth = size.x;
 
-		// touch screen
+		// playing with touch screen
 		final View touchView = findViewById(R.id.mainTouchView);
 		touchView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -102,8 +102,8 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 					break;
 
 				case MotionEvent.ACTION_MOVE:
-					float dx = 30*((x - mPreviousX)/screenWidth);
-					
+					float dx = 30 * ((x - mPreviousX) / screenWidth);
+
 					if (dx < -1) {
 						frameAnimation.prevFrame();
 						mPreviousX = x;
@@ -118,7 +118,8 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 					break;
 
 				case MotionEvent.ACTION_UP:
-					frameAnimation.setDuration(lastDirection*frameAnimation.getDuration());
+					frameAnimation.setDuration(lastDirection
+							* frameAnimation.getDuration());
 					frameAnimation.resume();
 
 					break;
@@ -142,33 +143,36 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		for (int i = 1; i <= 61; i++) {
 			String drawName = (i < 10) ? "000" + i : "00" + i;
 			Drawable tmp = getResources().getDrawable(
-					getResources().getIdentifier("hfu_drehend" + drawName, "drawable",
-							getPackageName()));
+					getResources().getIdentifier("hfu_drehend" + drawName,
+							"drawable", getPackageName()));
 			frameAnimation.addFrame(tmp, 50);
 		}
 
-		// this is deprecated but setBackground requires API 16!
+		// this is deprecated but setBackground requires at least API 16!
 		iv_hfu_spin.setBackgroundDrawable(frameAnimation);
 		frameAnimation.start();
 
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);
 
-		tv_gps.setText("Frage aktuelle Position ab...");
+		tv_data.setText(R.string.mainData);
+		tv_gps.setText(R.string.mainPos);
 
-		tv_network.setText("Suche nach Netzwerkverbindung...");
+		tv_network.setText(R.string.mainNet);
 		tv_network.setTextColor(Color.BLACK);
 
 		if (isNetworkAvailable()) {
-			tv_network.setText("Netzwerkverbindung gefunden!");
+			tv_network.setText(R.string.mainNetSuc);
+			tv_network.setTextColor(getResources().getColor(R.color.hfu_green));
 			networkStatus = true;
 		} else {
-			tv_network.setText("Keine Netzwerkverbindung :(");
+			tv_network.setText(R.string.mainNetFail);
 			tv_network.setTextColor(Color.RED);
 			networkStatus = false;
 		}
 
-		saveLocation(48.050278, 8.209167);
+		// skipping location fix:
+		// saveLocation(48.050278, 8.209167);
 	}
 
 	@Override
@@ -213,12 +217,15 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		sharedPref.edit().putFloat("lon", (float) lon).commit();
 
 		locMgr.removeUpdates(onLocationChange);
-		frameAnimation.stop();
-		tv_gps.setText("Aktuelle Position gefunden!");
+
+		tv_gps.setText(R.string.mainPosSuc);
+		tv_gps.setTextColor(getResources().getColor(R.color.hfu_green));
 
 		locationStatus = true;
-		if (networkStatus && dataLoaded)
+		if (networkStatus && dataLoaded) {
+			frameAnimation.stop();
 			startActivity(nextIntent);
+		}
 	}
 
 	LocationListener onLocationChange = new LocationListener() {
@@ -242,9 +249,14 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 	@Override
 	public void onTaskCompleted() {
 		dataLoaded = true;
-	
-		if (networkStatus && locationStatus)
+
+		tv_data.setText(R.string.mainDataSuc);
+		tv_data.setTextColor(getResources().getColor(R.color.hfu_green));
+
+		if (networkStatus && locationStatus) {
+			frameAnimation.stop();
 			startActivity(nextIntent);
+		}
 	}
 
 }

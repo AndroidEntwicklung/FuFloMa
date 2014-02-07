@@ -25,7 +25,7 @@ public class ProductDetailActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_product_detail);
 		setupActionBar();
-	
+
 		// get item ID
 		int itemID = 0;
 		int maxItems = 0;
@@ -48,14 +48,14 @@ public class ProductDetailActivity extends FragmentActivity {
 		// setup TabPager
 		SharedPreferences sharedPref = this.getSharedPreferences(
 				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-		
+
 		TabAdapter = new TabPagerAdapter(getSupportFragmentManager());
 		TabAdapter.setIMEI((String) sharedPref.getString("imei", ""));
 		TabAdapter.setItemCount(maxItems);
-		
+
 		Tab = (ViewPager) findViewById(R.id.pager);
 		Tab.setAdapter(TabAdapter);
-		
+
 		Tab.setCurrentItem(itemID);
 	}
 
@@ -65,7 +65,6 @@ public class ProductDetailActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
@@ -80,24 +79,22 @@ public class ProductDetailActivity extends FragmentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
-        case R.id.action_sell:
-    		Intent sell = new Intent(this, SellFormActivity.class);
+		case R.id.action_sell:
+			Intent sell = new Intent(this, SellFormActivity.class);
 			startActivity(sell);
-            return true;
-        case R.id.action_help:
-            helpDialog();
-            return true;
+			return true;
+		case R.id.action_help:
+			helpDialog();
+			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void helpDialog()
-	{
+
+	private void helpDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.helpDetailDialog).setPositiveButton(
-				R.string.intrAlertOK,
-				new DialogInterface.OnClickListener() {
+				R.string.intrAlertOK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}

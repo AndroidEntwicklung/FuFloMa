@@ -22,11 +22,11 @@
         android:required="true" />
 
     <application
+        android:name="com.example.fufloma.DataStorage"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-    	android:name="com.example.fufloma.DataStorage" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.fufloma.MainActivity"
             android:label="@string/app_name"
@@ -53,8 +53,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:parentActivityName="com.example.fufloma.ProductDetailFragment"
-            android:theme="@style/FullscreenTheme" 
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.fufloma.ProductDetailActivity" />
@@ -70,7 +70,7 @@
         <activity
             android:name="com.example.fufloma.GMapsActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.fufloma.ProductDetailFragment">
+            android:parentActivityName="com.example.fufloma.ProductDetailFragment" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.fufloma.ProductDetailActivity" />
@@ -88,8 +88,8 @@
             android:name="com.example.fufloma.SellFormActivity"
             android:label="@string/app_name"
             android:parentActivityName="com.example.fufloma.ProductListActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"  >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.fufloma.ProductListActivity" />

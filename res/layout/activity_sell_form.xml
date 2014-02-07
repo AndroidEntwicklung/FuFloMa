@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Neuen Artikel einstellen:"
+        android:text="@string/sellNewArt"
         android:textSize="14sp" />
 
     <Button
@@ -24,7 +24,7 @@
         android:layout_alignLeft="@+id/takePicButton"
         android:layout_toRightOf="@id/newArticleView"
         android:textSize="12sp"
-        android:text="Einstellen!" />
+        android:text="@string/sellSubmit" />
 
     <ImageView
         android:id="@+id/dummyImgView"
@@ -34,6 +34,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="42dip"
         android:background="#000"
+        android:contentDescription="@string/dummy"
         android:scaleType="centerCrop" />
 
     <ImageView
@@ -42,6 +43,7 @@
         android:layout_height="150dip"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="60dip"
+        android:contentDescription="@string/sellImg"
         android:scaleType="centerCrop"
         android:src="@drawable/produkt_dummy" />
 
@@ -54,7 +56,7 @@
         android:layout_marginTop="56dp"
         android:layout_toRightOf="@id/sellImgView"
         android:textSize="12sp"
-        android:text="Kamera" />
+        android:text="@string/sellCamera" />
 
     <Button
         android:id="@+id/getPicButton"
@@ -66,7 +68,7 @@
         android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/sellImgView"
         android:textSize="12sp"
-        android:text="Galerie" />
+        android:text="@string/sellDocs" />
 
     <TextView
         android:id="@+id/locDescView"
@@ -76,8 +78,8 @@
         android:layout_below="@+id/getPicButton"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="30dp"
-        android:text="Standort:"
-        android:textSize="18sp" />
+        android:text="@string/sellLoc"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/locationEdit"
@@ -87,6 +89,7 @@
         android:layout_below="@+id/getPicButton"
         android:layout_marginTop="25dp"
         android:ems="10"
+        android:inputType="textPostalAddress"
         android:minLines="1" >
 
     </EditText>
@@ -99,12 +102,12 @@
         android:layout_below="@+id/locationEdit"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="20dp"
-        android:text="Zustand:"
+        android:text="@string/sellState"
         android:textSize="12sp" />
 
     <Spinner
         android:id="@+id/stateSpinner"
-        android:layout_width="210dp"
+        android:layout_width="140dp"
         android:layout_height="38dp"
         android:layout_alignRight="@id/sellImgView"
         android:layout_below="@+id/locationEdit"
@@ -121,7 +124,7 @@
         android:layout_marginTop="2dp"
         android:textSize="12sp"
         android:ems="10"
-        android:hint="0.00"
+        android:hint="@string/sellPrice"
         android:inputType="numberDecimal"
         android:minLines="1" >
 
@@ -135,7 +138,7 @@
         android:layout_below="@+id/locationEdit"
         android:layout_marginRight="10dp"
         android:layout_marginTop="17dp"
-        android:text="Euro"
+        android:text="@string/sellEuro"
         android:textSize="12sp" />
 
     <TextView
@@ -146,7 +149,7 @@
         android:layout_below="@+id/stateSpinner"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="25dp"
-        android:text="Beschreibung:"
+        android:text="@string/sellDesc"
         android:textSize="18sp" />
     
         <TextView
@@ -157,7 +160,7 @@
         android:layout_below="@+id/stateSpinner"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="25dp"
-        android:text="(0 / 1000 Zeichen)"
+        android:text="@string/sellChars"
         android:textSize="18sp" />
     
     <EditText

@@ -41,18 +41,23 @@ public class ProductListAdapter extends BaseAdapter {
 		mRequestQueue = Volley.newRequestQueue(context);
 		this.listData = listData;
 		layoutInflater = LayoutInflater.from(context);
-		
-		mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
-		    private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
-		    public void putBitmap(String url, Bitmap bitmap) {
-		        mCache.put(url, bitmap);
-		    }
-		    public Bitmap getBitmap(String url) {
-		        return mCache.get(url);
-		    }
-		});
+
+		mImageLoader = new ImageLoader(mRequestQueue,
+				new ImageLoader.ImageCache() {
+					private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(
+							10);
+
+					public void putBitmap(String url, Bitmap bitmap) {
+						mCache.put(url, bitmap);
+					}
+
+					public Bitmap getBitmap(String url) {
+						return mCache.get(url);
+					}
+				});
 	}
 
+	// adds a separator at a specific position
 	@SuppressWarnings("unchecked")
 	public void addSeparatorItem(int index, final String item) {
 		ProductListItem sep = new ProductListItem();
@@ -63,16 +68,17 @@ public class ProductListAdapter extends BaseAdapter {
 
 		notifyDataSetChanged();
 	}
-	
+
+	// adds a separator at the end
 	@SuppressWarnings("unchecked")
 	public void addSeparatorItem(String item) {
 		ProductListItem sep = new ProductListItem();
 		sep.setDescription(item);
 
 		this.listData.add(sep);
-		mSeparatorsSet.add(this.listData.size()-1);
+		mSeparatorsSet.add(this.listData.size() - 1);
 
-		notifyDataSetChanged();	
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -99,7 +105,7 @@ public class ProductListAdapter extends BaseAdapter {
 	public int getViewTypeCount() {
 		return TYPE_MAX_COUNT;
 	}
-	
+
 	@Override
 	public boolean isEnabled(int position) {
 		return (getItemViewType(position) == TYPE_ITEM);
@@ -124,7 +130,8 @@ public class ProductListAdapter extends BaseAdapter {
 				holder.location = (TextView) convertView
 						.findViewById(R.id.location);
 				holder.price = (TextView) convertView.findViewById(R.id.price);
-				holder.bm = (NetworkImageView) convertView.findViewById(R.id.bitmap);
+				holder.bm = (NetworkImageView) convertView
+						.findViewById(R.id.bitmap);
 				break;
 			case TYPE_SEPARATOR:
 				convertView = layoutInflater.inflate(R.layout.product_list_sep,
@@ -145,11 +152,12 @@ public class ProductListAdapter extends BaseAdapter {
 
 		switch (type) {
 		case TYPE_ITEM:
-			holder.shortdesc.setText(listData.get(position)
-					.getDescription());
+			holder.shortdesc.setText(listData.get(position).getDescription());
 			holder.location.setText(listData.get(position).getPublicLocation());
 			holder.price.setText(form.format(price1));
-			holder.bm.setImageUrl(listData.get(position).getFullAttachmentURL(),mImageLoader);
+			holder.bm
+					.setImageUrl(listData.get(position).getFullAttachmentURL(),
+							mImageLoader);
 			break;
 		case TYPE_SEPARATOR:
 			holder.shortdesc.setText(listData.get(position).getDescription());
@@ -166,6 +174,5 @@ public class ProductListAdapter extends BaseAdapter {
 		NetworkImageView bm;
 
 	}
-	
 
 }

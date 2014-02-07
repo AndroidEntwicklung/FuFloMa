@@ -3,6 +3,7 @@ package com.example.fufloma;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.SystemClock;
 
+// custom animationdrawable which allows changing durations
 public class MyAnimationDrawable extends AnimationDrawable {
 
 	private volatile int duration;
@@ -22,88 +23,88 @@ public class MyAnimationDrawable extends AnimationDrawable {
 		nextFrame(false);
 	}
 
-    private void nextFrame(boolean unschedule) {
-    	int next = currentFrame;
-    	
-    	if (!paused)
-    		next += direction;
-    	
-        final int N = getNumberOfFrames();
-        if (next >= N) {
-            next = 0;
-        }
-        if (next < 0) {
-        	next = N - 1;
-        }
-        
-        setFrame(next, unschedule, true);
-    }
+	// copy of the original function
+	private void nextFrame(boolean unschedule) {
+		int next = currentFrame;
 
-    private void setFrame(int frame, boolean unschedule, boolean animate) {
-        if (frame >= getNumberOfFrames()) {
-            return;
-        }
-        currentFrame = frame;
-        selectDrawable(frame);
-        if (unschedule) {
-            unscheduleSelf(this);
-        }
-        if (animate) {
-            currentFrame = frame;
-            scheduleSelf(this, SystemClock.uptimeMillis() + duration);
-        }
-    }
-    
-    public int getDuration() {
-    	return duration;
-    }
+		if (!paused)
+			next += direction;
 
-    public int getDirection() {
-    	return direction;
-    }
-    
+		final int N = getNumberOfFrames();
+		if (next >= N) {
+			next = 0;
+		}
+		if (next < 0) {
+			next = N - 1;
+		}
+
+		setFrame(next, unschedule, true);
+	}
+
+	// copy of the original function
+	private void setFrame(int frame, boolean unschedule, boolean animate) {
+		if (frame >= getNumberOfFrames()) {
+			return;
+		}
+		currentFrame = frame;
+		selectDrawable(frame);
+		if (unschedule) {
+			unscheduleSelf(this);
+		}
+		if (animate) {
+			currentFrame = frame;
+			scheduleSelf(this, SystemClock.uptimeMillis() + duration);
+		}
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	// sets a duration and direction (forward/reverse)
 	public void setDuration(int duration) {
-		if (duration < 0)
-		{
+		if (duration < 0) {
 			duration *= -1;
 			direction = -1;
 		} else
 			direction = +1;
-		
+
 		this.duration = duration;
 
 		unscheduleSelf(this);
 		selectDrawable(currentFrame);
 		scheduleSelf(this, SystemClock.uptimeMillis() + duration);
 	}
-	
+
 	public void setCurrentFrame(int frame) {
 		currentFrame = frame;
 		selectDrawable(currentFrame);
 	}
-	
-	public void prevFrame()
-	{
-    	int next = currentFrame - 1;
-    	
-        final int N = getNumberOfFrames();
-        if (next < 0) {
-        	next = N - 1;
-        }
-        
-        setCurrentFrame(next);
+
+	public void prevFrame() {
+		int next = currentFrame - 1;
+
+		final int N = getNumberOfFrames();
+		if (next < 0) {
+			next = N - 1;
+		}
+
+		setCurrentFrame(next);
 	}
-	
-	public void nextFrame()
-	{
-    	int next = currentFrame + 1;
-    	
-        final int N = getNumberOfFrames();
-        if (next >= N) {
-            next = 0;
-        }
-        
-        setCurrentFrame(next);
+
+	public void nextFrame() {
+		int next = currentFrame + 1;
+
+		final int N = getNumberOfFrames();
+		if (next >= N) {
+			next = 0;
+		}
+
+		setCurrentFrame(next);
 	}
 
 	public void pause() {

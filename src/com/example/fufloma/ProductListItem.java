@@ -21,8 +21,7 @@ public class ProductListItem {
 	private double locLat;
 
 	/* COPY! */
-	public ProductListItem clone()
-	{
+	public ProductListItem clone() {
 		ProductListItem aClone = new ProductListItem();
 		aClone.id = id;
 		aClone.description = description;
@@ -36,9 +35,13 @@ public class ProductListItem {
 		aClone.phoneNumber = phoneNumber;
 		return aClone;
 	}
-	
+
 	public String toStringFull() {
-		return "_id=[" + id + "], _rev=[" + _rev + "], description=[" + description + "], location=[" + location + "], price=[" + price + "], _attachment=[" + _attachment + "], state=[" + state +"], sellerId=[" + sellerId + "], phoneNumber=[" + phoneNumber + "]";
+		return "_id=[" + id + "], _rev=[" + _rev + "], description=["
+				+ description + "], location=[" + location + "], price=["
+				+ price + "], _attachment=[" + _attachment + "], state=["
+				+ state + "], sellerId=[" + sellerId + "], phoneNumber=["
+				+ phoneNumber + "]";
 	}
 
 	public String getId() {
@@ -97,7 +100,7 @@ public class ProductListItem {
 	public void setAttachment(String _attachment) {
 		this._attachment = _attachment;
 	}
-	
+
 	public String getFullAttachmentURL() {
 		return baseURL + id + "/" + _attachment;
 	}
@@ -120,7 +123,7 @@ public class ProductListItem {
 
 		return df + " km";
 	}
-	
+
 	public Float getDistanceVal() {
 		return curDistance;
 	}

@@ -1,7 +1,6 @@
 package com.example.fufloma;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +35,8 @@ public class DataStorage extends Application {
 		initData();
 	}
 
+	// creates a new document in the couchdb
 	public void newDocument(JSONObject obj) {
-		// JsonObjectRequest jsonSend = new
-		// JsonObjectRequest(Request.Method.POST,
-		// "http://141.28.122.106:5984/fufloma/", jsonObject, null, null);
-
 		final String URL = "http://141.28.122.106:5984/fufloma/";
 
 		// Post params to be sent to the server
@@ -64,14 +60,17 @@ public class DataStorage extends Application {
 		// add the request object to the queue to be executed
 		queue.add(jsonSend);
 	}
-	
+
+	// deletes an object in the couchdb
 	public void deleteObj(String id, String rev) {
-		final String URL = "http://141.28.122.106:5984/fufloma/" + id + "?rev=" + rev;
-		
+		final String URL = "http://141.28.122.106:5984/fufloma/" + id + "?rev="
+				+ rev;
+
 		JSONObject object = new JSONObject();
 
 		// Post params to be sent to the server
-		JsonObjectRequest jsonSend = new JsonObjectRequest(Request.Method.DELETE, URL, object,
+		JsonObjectRequest jsonSend = new JsonObjectRequest(
+				Request.Method.DELETE, URL, object,
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
@@ -92,6 +91,7 @@ public class DataStorage extends Application {
 		queue.add(jsonSend);
 	}
 
+	// loads all objects from the couchdb
 	public void initData() {
 		queue.getCache().clear();
 
@@ -258,6 +258,7 @@ public class DataStorage extends Application {
 
 	}
 
+	// returns the number of products in a specific city
 	public int getProductCount(String searchLocation) {
 		int count = 0;
 
@@ -268,10 +269,12 @@ public class DataStorage extends Application {
 		return count;
 	}
 
+	// returns the total number of products
 	public int getProductCount() {
 		return productDB.size();
 	}
 
+	// returns an user by their id
 	public UserListItem getUserItem(String id) {
 		for (UserListItem u : userDB) {
 			if (u.getId().equalsIgnoreCase(id))
@@ -280,11 +283,13 @@ public class DataStorage extends Application {
 		return null;
 	}
 
+	// counts the running requests
 	private void addedRequest() {
 		requestCnt++;
 		finished = false;
 	}
 
+	// calls a callback function when done
 	private void requestDone() {
 		requestCnt--;
 
@@ -297,14 +302,17 @@ public class DataStorage extends Application {
 
 	}
 
+	// returns a boolean indicating if done
 	public boolean isFinished() {
 		return finished;
 	}
 
+	// returns the callback function
 	public OnTaskCompleted getListener() {
 		return listener;
 	}
 
+	// sets a callback function
 	public void setListener(OnTaskCompleted listener) {
 		this.listener = listener;
 		if (finished)

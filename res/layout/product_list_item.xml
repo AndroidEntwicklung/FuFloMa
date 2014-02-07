@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/bitmap"
-        android:text="shortdesc"
+        android:text="@string/dummy"
         android:maxLines="2"
         android:ellipsize="end"
         android:textStyle="bold"
@@ -35,7 +35,7 @@
         android:layout_toRightOf="@id/bitmap"
         android:layout_alignBottom="@id/bitmap"
         android:layout_marginBottom="5dip"
-        android:text="location"
+        android:text="@string/dummy"
         android:textSize="18sp"
         android:textColor="#343434" />
 
@@ -46,7 +46,7 @@
         android:layout_alignBaseline="@+id/location"
         android:layout_alignBottom="@+id/location"
         android:layout_alignParentRight="true"
-        android:text="price"
+        android:text="@string/dummy"
         android:textSize="18sp" 
         android:textColor="#343434"/>
 </RelativeLayout>

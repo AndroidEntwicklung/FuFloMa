@@ -53,23 +53,28 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 
 		curLat = sharedPref.getFloat("lat", 0.0f);
 		curLon = sharedPref.getFloat("lon", 0.0f);
-		
+
 		dataStorage = (DataStorage) getApplication();
 		dataStorage.setListener(this);
-		
+
 		dataLoaded = false;
 	}
-	
-	public static ArrayList<ProductListItem> cloneList(ArrayList<ProductListItem> list) {
-		ArrayList<ProductListItem> clone = new ArrayList<ProductListItem>(list.size());
-	    for(ProductListItem item: list) clone.add(((ProductListItem) item).clone());
-	    return clone;
+
+	// deep copy of list: the original and the one for the adapter
+	public static ArrayList<ProductListItem> cloneList(
+			ArrayList<ProductListItem> list) {
+		ArrayList<ProductListItem> clone = new ArrayList<ProductListItem>(
+				list.size());
+		for (ProductListItem item : list)
+			clone.add(((ProductListItem) item).clone());
+		return clone;
 	}
-	
-	// this is called as soon as volley is done! 
-    @Override
-    public void onTaskCompleted() {
-		String locName = (String) sharedPref.getString("locName", "Stuttgart");
+
+	// this is called as soon as volley is done!
+	@Override
+	public void onTaskCompleted() {
+		String locName = (String) sharedPref.getString("locName",
+				"Furtwangen im Schwarzwald");
 
 		Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
 
@@ -80,7 +85,8 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		try {
 			mPullToRefreshLayout = (PullToRefreshListView) findViewById(R.id.productLV);
 			pL_org = dataStorage.productDB;
-			
+
+			// calculate distances
 			for (ProductListItem item : pL_org) {
 				Location locationB = new Location("B");
 				locationB.setLatitude(geoCoder
@@ -97,105 +103,109 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 
 			// sort list by distance...
 			Collections.sort(pL_org, new DistanceSort());
-			
+
 			// ...and then clone it so the separators don't change the database
 			ArrayList<ProductListItem> productList = cloneList(pL_org);
 			ProductListAdapter plAdapter = new ProductListAdapter(this,
 					productList);
+
+			Resources res = getResources();
 			maxItems = dataStorage.productDB.size();
-			
+
 			int productsInCity = dataStorage.getProductCount(locName);
 			if (productsInCity > 0) {
 				plAdapter.addSeparatorItem(0, locName);
 				productsInCity++;
 			}
 
-			int productsOutCity = maxItems - Math.max(0, productsInCity-1);
+			int productsOutCity = maxItems - Math.max(0, productsInCity - 1);
 			if (productsOutCity > 0) {
-				Resources res = getResources();
 				plAdapter.addSeparatorItem(productsInCity,
 						res.getString(R.string.umgebung));
 			}
 
-			plAdapter.addSeparatorItem("Keine weiteren Ergebnisse");
+			plAdapter.addSeparatorItem(res.getString(R.string.umgebung));
 
 			mPullToRefreshLayout.setAdapter(plAdapter);
-			mPullToRefreshLayout.setOnItemClickListener(new OnItemClickListener() {
+			mPullToRefreshLayout
+					.setOnItemClickListener(new OnItemClickListener() {
 
-				@Override
-				public void onItemClick(AdapterView<?> a, View v, int position,
-						long id) {
-					Object o = a.getItemAtPosition(position);
-					ProductListItem productData = (ProductListItem) o;
+						@Override
+						public void onItemClick(AdapterView<?> a, View v,
+								int position, long id) {
+							Object o = a.getItemAtPosition(position);
+							ProductListItem productData = (ProductListItem) o;
 
-					Intent myIntent = new Intent(v.getContext(),
-							ProductDetailActivity.class);
+							Intent myIntent = new Intent(v.getContext(),
+									ProductDetailActivity.class);
 
-					int ID = 0;
-					for (int i = 0; i < pL_org.size(); i++)
-						if (pL_org.get(i).getId()==productData.getId())
-						{
-							ID = i;
-							break;
+							int ID = 0;
+							for (int i = 0; i < pL_org.size(); i++)
+								if (pL_org.get(i).getId() == productData
+										.getId()) {
+									ID = i;
+									break;
+								}
+
+							myIntent.putExtra("ID", ID);
+							myIntent.putExtra("maxItems", maxItems);
+
+							startActivityForResult(myIntent, 2);
 						}
-					
-					myIntent.putExtra("ID", ID);
-					myIntent.putExtra("maxItems", maxItems);
+					});
 
-					startActivityForResult(myIntent, 2);
-				}
-			});
+			mPullToRefreshLayout
+					.setOnRefreshListener(new OnRefreshListener<ListView>() {
+						@Override
+						public void onRefresh(
+								PullToRefreshBase<ListView> refreshView) {
+							new AsyncTask<Void, Void, Void>() {
+								// this is for the "pull to refresh" ListView
+								
+								@Override
+								protected Void doInBackground(Void... params) {
+									try {
+										if (!dummyLoading) {
+											dataStorage.initData();
+											dataLoaded = false;
 
-			mPullToRefreshLayout.setOnRefreshListener(new OnRefreshListener<ListView>() {
-				@Override
-				public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-					new AsyncTask<Void, Void, Void>() {
+											while (!dataLoaded)
+												Thread.sleep(1000);
+										} else {
+											Thread.sleep(1000);
+											dummyLoading = false;
+										}
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									return null;
+								}
 
-			            @Override
-			            protected Void doInBackground(Void... params) {
-			                try {
-			                	if (!dummyLoading) {			                	
-			                		dataStorage.initData();
-			                		dataLoaded = false;
-			                		
-			                		while (!dataLoaded)
-				                		Thread.sleep(1000);
-			                	} else {
-			                		Thread.sleep(1000);
-			                		dummyLoading = false;
-			                	}
-			                } catch (InterruptedException e) {
-			                    e.printStackTrace();
-			                }
-			                return null;
-			            }
+								@Override
+								protected void onPostExecute(Void result) {
+									super.onPostExecute(result);
+									mPullToRefreshLayout.onRefreshComplete();
+								}
+							}.execute();
+						}
+					});
 
-			            @Override
-			            protected void onPostExecute(Void result) {
-			                super.onPostExecute(result);
-			                mPullToRefreshLayout.onRefreshComplete();
-			            }
-			        }.execute();
-				}
-			});
-			
 			dummyLoading = true;
 			mPullToRefreshLayout.setRefreshing();
-			
+
 			dataLoaded = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
-   
-    
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-    	 if (requestCode == 1 && resultCode == RESULT_OK)
-    		 mPullToRefreshLayout.setRefreshing();
-    	 if (requestCode == 2 && resultCode == RESULT_OK)
-    		 mPullToRefreshLayout.setRefreshing();
-    }
+	}
+
+	// when coming back from selling or deleting
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1 && resultCode == RESULT_OK)
+			mPullToRefreshLayout.setRefreshing();
+		if (requestCode == 2 && resultCode == RESULT_OK)
+			mPullToRefreshLayout.setRefreshing();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -223,6 +233,7 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		return super.onOptionsItemSelected(item);
 	}
 
+	// help dialog
 	private void helpDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.helpListDialog).setPositiveButton(
@@ -235,17 +246,18 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 		builder.create().show();
 	}
 
+	// double press to exit
 	@Override
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce) {
 			super.onBackPressed();
-			
+
 			return;
 		}
 		this.doubleBackToExitPressedOnce = true;
-		Toast.makeText(this, "Erneut drücken zum Verlassen.",
+		Toast.makeText(this, R.string.pressAgain,
 				Toast.LENGTH_SHORT).show();
-		
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="58dp"
+            android:layout_marginTop="100dp"
             android:text="@string/app_name"
-            android:textSize="32sp" />
+            android:textSize="50sp" />
 
         <ImageView
             android:id="@+id/hfuRotator"
@@ -37,8 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/hfuRotator"
             android:layout_centerHorizontal="true"
+            android:text="@string/mainNet"
             android:layout_marginTop="10dp"
-            android:text="@string/mainNet" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/DataSearchInfo"
@@ -46,8 +47,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/NetworkSearchInfo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:text="@string/mainData" />
+            android:layout_marginTop="4dp"
+            android:text="@string/mainData"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/GpsSearchInfo"
@@ -55,8 +57,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/DataSearchInfo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:text="@string/mainPos" />
+            android:layout_marginTop="4dp"
+            android:text="@string/mainPos"
+            android:textSize="22sp" />
     </RelativeLayout>
 
     <LinearLayout

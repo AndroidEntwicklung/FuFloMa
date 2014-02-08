@@ -201,7 +201,7 @@ public class SellFormActivity extends Activity {
 		Spinner spinner = (Spinner) findViewById(R.id.stateSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter
 				.createFromResource(this, R.array.state_array,
-						android.R.layout.simple_spinner_item);
+						R.layout.spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 

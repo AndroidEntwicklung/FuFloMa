@@ -1,5 +1,9 @@
 package com.example.fufloma;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -157,8 +161,12 @@ public class ProductDetailFragment extends Fragment {
 
 		// setup price TextView
 		TextView priceView = (TextView) fragView.findViewById(R.id.priceText);
-		priceView.setText(String.format("%.2f", product.getPrice()) + "€");
-
+		//priceView.setText(String.format("%.2f", product.getPrice()) + "€");
+		NumberFormat form = NumberFormat.getCurrencyInstance(new Locale("de", "DE"));
+		BigDecimal price1 = new BigDecimal(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP);
+		priceView.setText(form.format(price1));
+		
+		
 		// setup state TextView
 		TextView stateView = (TextView) fragView.findViewById(R.id.stateText);
 		stateView.setText(res.getString(R.string.state) + ":\t\t"

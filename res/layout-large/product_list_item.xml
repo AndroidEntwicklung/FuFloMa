@@ -23,29 +23,30 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:typeface="sans"
+        android:textColor="#343434" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bitmap"
+        android:layout_alignBottom="@id/bitmap"
+        android:layout_marginBottom="5dip"
+        android:text="@string/dummy"
+        android:textSize="18sp"
         android:textColor="#343434" />
 
     <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/shortdesc"
-        android:layout_toRightOf="@+id/bitmap"
+        android:layout_alignBaseline="@+id/location"
+        android:layout_alignBottom="@+id/location"
+        android:layout_alignParentRight="true"
         android:text="@string/dummy"
-        android:textColor="#343434"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/price"
-        android:layout_toRightOf="@+id/bitmap"
-        android:text="@string/dummy"
-        android:textColor="#343434"
-        android:textSize="16sp" />
-
+        android:textSize="18sp" 
+        android:textColor="#343434"/>
 </RelativeLayout>

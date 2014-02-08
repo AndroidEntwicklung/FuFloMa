@@ -124,7 +124,7 @@ public class ProductListActivity extends Activity implements OnTaskCompleted {
 						res.getString(R.string.umgebung));
 			}
 
-			plAdapter.addSeparatorItem(res.getString(R.string.umgebung));
+			plAdapter.addSeparatorItem(res.getString(R.string.noResults));
 
 			mPullToRefreshLayout.setAdapter(plAdapter);
 			mPullToRefreshLayout

@@ -55,7 +55,6 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		dataStorage = (DataStorage) getApplication();
-		dataStorage.setListener(this);
 
 		sharedPref = this.getSharedPreferences(
 				getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -128,6 +127,7 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 				return true;
 			}
 		});
+		dataStorage.setListener(this);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -155,7 +155,7 @@ public class MainActivity extends Activity implements OnTaskCompleted {
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
 				onLocationChange);
 
-		tv_data.setText(R.string.mainData);
+		//tv_data.setText(R.string.mainData);
 		tv_gps.setText(R.string.mainPos);
 
 		tv_network.setText(R.string.mainNet);
